@@ -1,9 +1,12 @@
-const url = "http://localhost:3000/code"
+//const url = "http://localhost:3000/code"
+
+const url = "http://localhost:4000/analyze"
+
 
 async function analizar(){
     const jtxtJSharp = ace.edit("Editor");
     const entrada = jtxtJSharp.getSession().getValue();
-    //console.log(entrada);
+    console.log(entrada);
     await setCode(entrada)
     
 }
@@ -24,4 +27,8 @@ async function setCode(texto){
       .catch(error => console.error('Error:', error))
       .then(response => console.log('Success:', response));
    
+}
+
+function openFile(path){
+
 }

@@ -3,7 +3,7 @@ import {Request,Response} from 'express'
 import {AST} from '../ast/AST'
 
 export const analizar = (req:Request,res:Response) =>{
-    const traduccion  = analiazarJava(req.body.texto);
+    const traduccion  = analiazarJava(req.body.Code);
     //console.log(traduccion);
     return res.status(201).json({translate:`${traduccion}`})
 }

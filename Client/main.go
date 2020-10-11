@@ -38,7 +38,7 @@ func setCode(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(newCode)
-	fmt.Println(newCode)
+	//fmt.Println(newCode)
 }
 
 func main() {
