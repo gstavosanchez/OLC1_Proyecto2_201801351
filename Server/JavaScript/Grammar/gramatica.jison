@@ -61,7 +61,10 @@
 
 \"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); return 'cadena'; /*//"*/ }
 
-[0-9]+"."[0-9]+		return 'decimal';
+
+
+[0-9]+("."[0-9]+)?		return 'decimal';
+
 
 ([a-zA-Z_])[a-zA-Z0-9_]*		return 'identificador';
 [ \r\t]+			{}
@@ -158,7 +161,7 @@ EXPRESION :
 	;
 
 PRIMITIVO : 
-	  decimal		{ $$ = new Primitivo( $1, this._$.first_line, this._$.first_column); }
+	decimal		{ $$ = new Primitivo( $1, this._$.first_line, this._$.first_column); }
 	| cadena		{ $$ = new Primitivo( $1, this._$.first_line, this._$.first_column); }
 	| true_			{ $$ = new Primitivo( true, this._$.first_line, this._$.first_column); }
 	| false_		{ $$ = new Primitivo( false, this._$.first_line, this._$.first_column); }

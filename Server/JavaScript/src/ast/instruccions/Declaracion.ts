@@ -21,8 +21,8 @@ export class Declaracion extends Instruccion{
     }
 
     translate():string{
-        const txtTranslate: string = `var ${this.id} = ${this.valor.translate()};` + '\n';
-        return  txtTranslate;
+        return `var ${this.id} = ${this.valor.translate()};` + '\n';
+       
     }
 
     getNameSon():string{

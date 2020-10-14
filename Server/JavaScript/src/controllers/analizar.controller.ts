@@ -19,7 +19,7 @@ class {
 
 function analiazarJava(codigo:string):string{
     const ast = Grammar.parse(codigo) as AST;
-    //console.log(ast)
+    console.log(ast)
     return `${ast.translate()}`;
 
 }

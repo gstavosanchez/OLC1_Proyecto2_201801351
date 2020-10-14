@@ -17,7 +17,11 @@ export class While extends Instruccion{
    } 
 
    translate():string{
-       return ''
+       let cadena = "mientras("+this.condicion.translate()+"){\n";
+       this.instruccion.forEach(ins => {
+           cadena += ins.translate()
+       });
+       return `${cadena}\n}\n`
    }
 
    getNameSon():string{

@@ -1,4 +1,5 @@
 export enum Type{
+    INT,
     NUMERIC,
     STRING,
     BOOLEAN,

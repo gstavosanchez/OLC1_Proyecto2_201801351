@@ -14,7 +14,7 @@ export class Print extends Instruccion{
     }
 
     translate():string{
-        return "";
+        return "imprimir("+this.expresion.translate()+");\n";
     }
 
     getNameSon():string{
