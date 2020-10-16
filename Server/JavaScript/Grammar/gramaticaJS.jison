@@ -1,4 +1,5 @@
 %{
+	
 %}
 /* Definició Léxica */
 %lex
@@ -11,7 +12,6 @@
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]		/* ignore comment Multilinea*/
 
 "int"			    return 'int_';
-"numeric"			return 'numeric_';
 "string"			return 'string_';
 "boolean"			return 'boolean_';
 "char"				return 'char_';
@@ -31,34 +31,41 @@
 "args"				return 'args_';
 "public"			return 'public_';
 "static"			return 'static_';
+"else"				return 'else_';
 
 
+"=="				return 'dobleIgual_';
 "="					return 'igual';
 ";"					return 'pcoma';
 "{"					return 'llaveAbre';
 "}"					return 'llaveCierra';
 "[]"				return 'corchetes';
 
+"++"				return 'adicion_';
 "+"					return 'mas';
+"--"				return 'sustraccion_';
 "-"					return 'menos';
 "*"					return 'por';
 "/"					return 'division';
 "("					return 'parAbre';
 ")"					return 'parCierra';
 
+"<="				return 'menorQI';
+">="				return 'mayorQI';
 "<"					return 'menorQ';
 ">"					return 'mayorQ';
+"!="				return 'difirente_';
 
 "&&"				return 'and_';
 "||"				return 'or_';
 "!"					return 'not_';
+"^"					return 'xor_';
 
 "true"				return 'true_';
 "false"				return 'false_';
 
 \"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); return 'cadena'; /*//"*/ }
-
-
+"'"[^']"'"				 return 'caracter';
 
 [0-9]+("."[0-9]+)?		return 'decimal';
 
@@ -75,13 +82,13 @@
 
 %left 'or_'
 %left 'and_'
-%left 'mayorQ' 'menorQ'
+%left 'mayorQ' 'menorQ' 'mayorQI' 'menorQI'
+
 
 %left 'mas' 'menos'
 %left 'por' 'division'
 
-%left uMenos
-%right 'not_'
+%right 'UMENOS' 'UNOT'
 
 
 
@@ -186,6 +193,8 @@ FOR:
 
 IF:
 		if_ CONDICION BLOQUE_SENTENCIA
+	| 	if_ CONDICION BLOQUE_SENTENCIA else_  BLOQUE_SENTENCIA
+	|	if_ CONDICION BLOQUE_SENTENCIA else_ IF
 	;
 
 DOWHILE:
@@ -207,17 +216,21 @@ EXPRESION:
 		EXPRESION mas EXPRESION
 	|	EXPRESION menos EXPRESION
 	|	EXPRESION por EXPRESION
-	|	EXPRESION division EXPRESION
+	|	EXPRESION adicion_ 
+	|	EXPRESION sustraccion_ 
+	|	menos EXPRESION %prec UMENOS
 		//Relacionales
-	| 	EXPRESION mayorQ igual EXPRESION
-	|	EXPRESION menorQ igual EXPRESION
+	| 	EXPRESION mayorQI EXPRESION
+	|	EXPRESION menorQI  EXPRESION
 	| 	EXPRESION menorQ EXPRESION
 	|	EXPRESION mayorQ EXPRESION
-	|	EXPRESION igual igual EXPRESION
+	|	EXPRESION dobleIgual_ EXPRESION
+	|	EXPRESION difirente_ EXPRESION
 		//Logicos
 	|	EXPRESION or_ EXPRESION
 	|	EXPRESION and_ EXPRESION
-	|	not_ EXPRESION
+	|	not_ EXPRESION %prec UNOT
+	|	EXPRESION xor_ EXPRESION
 	|	parAbre EXPRESION parCierra
 	|	PRIMITIVO
 	;
@@ -225,6 +238,7 @@ EXPRESION:
 PRIMITIVO:
 		decimal
 	|	cadena
+	|	caracter
 	|	true_
 	|	false_
 	|	identificador
@@ -237,4 +251,5 @@ TIPO:
 	|	float_
 	|	char_
 	|	void_
+	|	boolean_
 	;

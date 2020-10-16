@@ -1,29 +1,25 @@
-import { Instruccion } from "./Instrucciones";
+import { Sentencia } from "./Sentencia";
 
-export class AST extends Instruccion{
-
-    instrucciones:Array<Instruccion>;
-    listaErrorr:Array<string> = new Array<string>();
-    listaPrint:Array<string> = new Array<string>();
-
-    
-
+export class AST extends Sentencia {
+    private sentencias:Array<Sentencia>;
+    //private listaError: Array<string>;
+    //private listaPrints:Array<string>;
     constructor(
-        instrucciones:Array<Instruccion>
-    ){
-        super(0,0)
-        this.instrucciones = instrucciones;
+        sentecias:Array<Sentencia>
+    ) {
+        super(0,0);
+        this.sentencias = sentecias;
     }
 
     translate():string{
-        let cadena:string = "";
-        for (let index = 0; index < this.instrucciones.length; index++) {
-            cadena += this.instrucciones[index].translate();
-            
-        }
-        return cadena;
+        let code:string = "";
+        this.sentencias.forEach(element => {
+            code += element.translate();
+        });
+        return code;
     }
+
     getNameSon():string{
-        throw new Error("Method not implementd");
+        throw new Error("Method not implemented.");
     }
 }

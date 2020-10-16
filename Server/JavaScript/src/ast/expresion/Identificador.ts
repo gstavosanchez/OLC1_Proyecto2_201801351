@@ -1,25 +1,20 @@
-import { Instruccion } from "../Instrucciones"
+import { Sentencia } from "../Sentencia";
 
-export class Identificador extends Instruccion{
-
+export class Identificador extends Sentencia {
     id:string;
-
     constructor(
         id:string,
         line:number,
-        column:number
-    ){
-        super(line,column);
-        this.id = id;
+        columna:number
+    ) {
+        super(line,columna);
+        this.id = id
     }
 
     translate():string{
         return this.id;
     }
-
     getNameSon():string{
         return "IDENTIFICADOR";
     }
-
-
 }

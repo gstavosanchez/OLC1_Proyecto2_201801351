@@ -1,9 +1,11 @@
 export enum Type{
     INT,
-    NUMERIC,
     STRING,
     BOOLEAN,
-    VOID
+    VOID,
+    DOUBLE,
+    FLOAT,
+    CHAR,
 }
 export enum TypeOperation{
     SUMA,
@@ -12,8 +14,16 @@ export enum TypeOperation{
     DIVISION,
     MAYOR,
     MENOR,
+    MAYOR_IGUAL,
+    MENOR_IGUAL,
     OR,
     AND,
     MENOSUNARIO,
-    NOT
+    NOT,
+    COMPARACION,
+    DIFERENTE,
+    ADICION,
+    SUSTRACCION,
+    NEGATIVO,
+    XOR
 }
