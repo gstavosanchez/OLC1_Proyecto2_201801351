@@ -6,6 +6,9 @@ export enum Type{
     DOUBLE,
     FLOAT,
     CHAR,
+    CLASS,
+    INTERFACE,
+    MAIN
 }
 export enum TypeOperation{
     SUMA,
@@ -25,5 +28,6 @@ export enum TypeOperation{
     ADICION,
     SUSTRACCION,
     NEGATIVO,
-    XOR
+    XOR,
+    NEGACION
 }

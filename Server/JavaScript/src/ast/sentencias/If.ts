@@ -44,6 +44,6 @@ export class If extends Sentencia {
         return data;
     }
     getNameSon():string{
-        return "";
+        return "IF";
     }
 }

@@ -45,7 +45,7 @@ func main() {
 	router := mux.NewRouter().StrictSlash(true)
 
 	//router.Handle("/", http.FileServer(http.Dir("./public")))
-	router.HandleFunc("/code", setCode).Methods("POST")
+	///router.HandleFunc("/code", setCode).Methods("POST")
 	router.PathPrefix("/client/").Handler(http.StripPrefix("/client/", http.FileServer(http.Dir("./public")))).Methods("GET")
 	fmt.Println("Server on port 3000")
 	log.Fatal(http.ListenAndServe(":3000", router))

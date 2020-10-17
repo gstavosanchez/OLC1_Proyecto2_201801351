@@ -15,5 +15,6 @@ export class Primitivo extends Sentencia {
     }
     getNameSon():string{
         return "PRIMITIVO";
+        
     }
 }

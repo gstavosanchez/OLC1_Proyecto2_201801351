@@ -1,31 +1,27 @@
 import { Sentencia } from "../Sentencia";
 import { Type } from "../Tipo";
 
-export class Declaracion extends Sentencia {
+export class Parametro extends Sentencia {
 
-    id:string;
-    valor:Sentencia;
-    type:Type;
+    private id:string;
+    private type:Type;
 
     constructor(
         type:Type,
         id:string,
-        valor:Sentencia,
         linea:number,
         column:number
     ) {
         super(linea,column);
         this.id = id;
-        this.valor = valor;
         this.type = type;
     }
 
     translate():string{
-        if(this.valor == null) return `var ${this.id}; \n`; 
-        return `var ${this.id} = ${this.valor.translate()}; \n`;
+        return `${this.id} `;
     }
     
     public getNameSon():string{
-        return "DECLARACION";
+        return "Parametro";
     }
 }
