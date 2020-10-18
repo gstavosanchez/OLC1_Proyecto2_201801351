@@ -16,7 +16,7 @@ export class Asignacion extends Sentencia{
     }
 
     translate():string{
-        return `${this.id} = ${this.valor};\n`;
+        return `${this.id} = ${this.valor.translate()};\n`;
     }
     getNameSon():string{
         return 'ASIGNACION';

@@ -4,7 +4,7 @@ const url = "http://localhost:4000/analyze"
 
 
 async function analizar(){
-    const jtxtJSharp = ace.edit("Editor");
+  const jtxtJSharp = ace.edit("Editor");
     const entrada = jtxtJSharp.getSession().getValue();
     console.log(entrada);
     await setCode(entrada)
@@ -29,6 +29,12 @@ async function setCode(texto){
    
 }
 
-function openFile(path){
+
+
+function openFile(){
+
+  console.log('hola')
+
+  
 
 }

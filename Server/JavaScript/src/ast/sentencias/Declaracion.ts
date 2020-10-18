@@ -21,7 +21,9 @@ export class Declaracion extends Sentencia {
     }
 
     translate():string{
-        if(this.valor == null) return `var ${this.id}; \n`; 
+        if(this.valor == null) return `var ${this.id}; \n`;
+        if(this.type == Type.STRING && this.valor != null ) return `var ${this.id} = "${this.valor.translate()}";`
+        if(this.type == Type.CHAR && this.valor != null ) return `var ${this.id} = '${this.valor.translate()}';`  
         return `var ${this.id} = ${this.valor.translate()}; \n`;
     }
     

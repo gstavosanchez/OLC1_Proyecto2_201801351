@@ -18,7 +18,7 @@ export class Parametro extends Sentencia {
     }
 
     translate():string{
-        return `${this.id} `;
+        return `${this.id}`;
     }
     
     public getNameSon():string{

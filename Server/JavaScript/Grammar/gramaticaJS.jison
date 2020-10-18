@@ -18,6 +18,8 @@
 	const {Print} = require("../dist/ast/sentencias/Print");
 	const {Return} = require("../dist/ast/sentencias/Return");
 	const {While} = require("../dist/ast/sentencias/While");
+	const {DoWhile} = require("../dist/ast/sentencias/DoWhile");
+	const {For} = require("../dist/ast/sentencias/For");
 	
 %}
 /* Definició Léxica */
@@ -51,6 +53,7 @@
 "public"			return 'public_';
 "static"			return 'static_';
 "else"				return 'else_';
+"do"				return 'do_';
 
 
 "=="				return 'dobleIgual_';
@@ -142,6 +145,9 @@ LISTA_SENTENCIAS_GLBOALES:
 SENTENCIAS_GLOBALES:
 	  FUNCION { $$ = $1; }
 	| DECLARACION { $$ = $1; }
+	| error pcoma {
+		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+	}
 	;
 
 FUNCION:
@@ -184,6 +190,9 @@ SENTENCIAS:
 	| IF { $$ = $1; }
 	| PRINT { $$ = $1; }
 	| RETURN { $$ = $1; }
+	| error pcoma {
+		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+	}
 	;
 
 ASIGNACION:
@@ -198,7 +207,7 @@ CONDICION:
 	;
 
 FOR:
-	 for_ parAbre DECLARACION pcoma EXPRESION pcoma EXPRESION parCierra BLOQUE_SENTENCIA { $$ = $3; }
+	 for_ parAbre DECLARACION pcoma EXPRESION pcoma EXPRESION parCierra BLOQUE_SENTENCIA { $$ = new For($3, $5, $7, $9, this._$.first_line, this._$.first_column); }
 	;
 
 IF:
@@ -208,7 +217,7 @@ IF:
 	;
 
 DOWHILE:
-	  do_ BLOQUE_SENTENCIA while_ parAbre EXPRESION parCierra pcoma
+	  do_ BLOQUE_SENTENCIA while_ CONDICION pcoma {$$ = new DoWhile($2, $4, this._$.first_line, this._$.first_column);}
 	;
 
 
@@ -230,16 +239,16 @@ EXPRESION:
 	//| EXPRESION sustraccion_ { $$ = new OperacionAritmetica.default( TypeOperation.SUSTRACCION, $1, null, this._$.first_line, this._$.first_column); }  
 	| menos EXPRESION %prec UMENOS { $$ = new OperacionAritmetica( TypeOperation.NEGATIVO, $2, null, this._$.first_line, this._$.first_column); }
 		//Relacionales
-	| EXPRESION mayorQI EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MAYOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
-	| EXPRESION menorQI  EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MENOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
-	| EXPRESION menorQ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MENOR, $1, $3, this._$.first_line, this._$.first_column); }
-	| EXPRESION mayorQ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MAYOR, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION mayorQI EXPRESION { $$ = new OperacionRelacional( TypeOperation.MAYOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION menorQI  EXPRESION { $$ = new OperacionRelacional( TypeOperation.MENOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION menorQ EXPRESION { $$ = new OperacionRelacional( TypeOperation.MENOR, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION mayorQ EXPRESION { $$ = new OperacionRelacional( TypeOperation.MAYOR, $1, $3, this._$.first_line, this._$.first_column); }
 	//| EXPRESION dobleIgual_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.COMPARACION, $1, $3, this._$.first_line, this._$.first_column); }
 	//| EXPRESION difirente_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.DIFERENTE, $1, $3, this._$.first_line, this._$.first_column); }
 		//Logicos
-	| EXPRESION or_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.OR, $1, $3, this._$.first_line, this._$.first_column); }
-	| EXPRESION and_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.AND, $1, $3, this._$.first_line, this._$.first_column); }
-	| not_ EXPRESION %prec UNOT { $$ = new OperacionAritmetica( TypeOperation.NOT, $2, null, this._$.first_line, this._$.first_column); }
+	| EXPRESION or_ EXPRESION { $$ = new OperacionLogica( TypeOperation.OR, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION and_ EXPRESION { $$ = new OperacionLogica( TypeOperation.AND, $1, $3, this._$.first_line, this._$.first_column); }
+	| not_ EXPRESION %prec UNOT { $$ = new OperacionLogica( TypeOperation.NOT, $2, null, this._$.first_line, this._$.first_column); }
 	//| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| parAbre EXPRESION parCierra {$$ = $2;}
 	| PRIMITIVO { $$ = $1;}

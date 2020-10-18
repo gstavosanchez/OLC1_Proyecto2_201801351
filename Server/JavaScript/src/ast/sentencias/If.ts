@@ -32,7 +32,7 @@ export class If extends Sentencia {
         });
         data += `if(${this.condicion.translate()}){\n${sentenciaIFData}}`;
         if(this.elseIf != undefined){
-            data += `else if ${this.elseIf.translate()}`;
+            data += `else ${this.elseIf.translate()}`;
         }else if(this.sentenciasElse != undefined){
             let senteciasElseData:string = "";
             this.sentenciasElse.forEach(element => {
