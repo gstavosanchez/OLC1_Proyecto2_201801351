@@ -15,13 +15,16 @@ export const analizar = (req:Request,res:Response) =>{
 
 
 function analiazarJava(codigo:string):string{
-    try {
-        const ast = Grammar.parse(codigo) as AST;
+
+
+    const ast = Grammar.parse(codigo) as AST;
+
+    if(ast.getListError() != '') {
+        return `${ast.getListError()}`;
+    }else{
         return `${ast.translate()}`;    
-    } catch (error) {
-        //console.log('Error:',error)
-        return error;
     }
+        
     
 
 }

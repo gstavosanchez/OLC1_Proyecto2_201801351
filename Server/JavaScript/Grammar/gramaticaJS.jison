@@ -2,6 +2,7 @@
 	const {Sentencia} = require("../dist/ast/Sentencia");
 	const {Type,TypeOperation} = require("../dist/ast/Tipo");
 	const {AST} = require("../dist/ast/AST");
+	const {NodoError} = require("../dist/ast/error");
 
 	const {Primitivo} = require("../dist/ast/expresion/Primitivo");
 	const {Identificador} = require("../dist/ast/expresion/Identificador");
@@ -22,6 +23,14 @@
 	const {For} = require("../dist/ast/sentencias/For");
 	
 %}
+%{
+	var listError = [];
+	function agregarError(tipo,value,descripcion,fila,columna){
+		newError = new NodoError(tipo,value,descripcion,fila,columna);
+		listError.push(newError);
+	};
+	%}
+
 /* Definició Léxica */
 %lex
 
@@ -102,6 +111,7 @@
 \n					{}
 <<EOF>>				return 'EOF';
 .	{ 
+		agregarError("Lexico",yytext,"No se reconoce en el lenguaje",yylloc.first_line,yylloc.first_column);
 		console.error('Error léxico: ' + yytext + ', line: ' + yylloc.first_line + ', column: ' + yylloc.first_column); 
 	}
 
@@ -123,7 +133,7 @@
 
 %% 
 INI : LISTA_CLASES EOF {
-		var root = new AST($1)
+		var root = new AST($1,listError)
 		return root;
 	}
 	| ;
@@ -151,6 +161,7 @@ SENTENCIAS_GLOBALES:
 	  FUNCION { $$ = $1; }
 	| DECLARACION { $$ = $1; }
 	| error pcoma{
+		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 	}
 	;
@@ -197,6 +208,7 @@ SENTENCIAS:
 	| PRINT { $$ = $1; }
 	| RETURN { $$ = $1; }
 	| error pcoma{
+		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 	}
 	;
