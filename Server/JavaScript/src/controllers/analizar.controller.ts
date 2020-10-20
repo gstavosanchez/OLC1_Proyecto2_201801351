@@ -5,7 +5,7 @@ import { AST } from '../ast/AST';
 
 export const analizar = (req:Request,res:Response) =>{
     const traduccion  = analiazarJava(req.body.Code);
-    console.log(traduccion);
+    //console.log(traduccion);
     return res.status(201).json({translate:`${traduccion}`})
     
 }
@@ -15,9 +15,14 @@ export const analizar = (req:Request,res:Response) =>{
 
 
 function analiazarJava(codigo:string):string{
-    const ast = Grammar.parse(codigo) as AST;
-    //console.log(ast)
-    return `${ast.translate()}`;
+    try {
+        const ast = Grammar.parse(codigo) as AST;
+        return `${ast.translate()}`;    
+    } catch (error) {
+        //console.log('Error:',error)
+        return error;
+    }
+    
 
 }
 

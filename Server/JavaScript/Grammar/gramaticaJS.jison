@@ -40,6 +40,9 @@
 "void"				return 'void_';
 
 "print"				return 'print_';
+"println"			return 'println_';
+"System"			return 'system_';
+"out"				return 'out_';
 "while"				return 'while_';
 "if"				return 'if_';
 "else"				return 'else_';
@@ -59,6 +62,7 @@
 "=="				return 'dobleIgual_';
 "="					return 'igual';
 ";"					return 'pcoma';
+"."					return 'punto_';
 ","					return 'coma';
 "{"					return 'llaveAbre';
 "}"					return 'llaveCierra';
@@ -131,6 +135,7 @@ LISTA_CLASES :
 
 CLASE :
 	 public_ TIPO_CLASE identificador llaveAbre LISTA_SENTENCIAS_GLBOALES llaveCierra { $$= new Class($2, $3, $5, this._$.first_line, this._$.first_column); }
+	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, [], this._$.first_line, this._$.first_column); }
 	;
 
 TIPO_CLASE:
@@ -145,18 +150,18 @@ LISTA_SENTENCIAS_GLBOALES:
 SENTENCIAS_GLOBALES:
 	  FUNCION { $$ = $1; }
 	| DECLARACION { $$ = $1; }
-	| error pcoma {
+	| error pcoma{
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 	}
 	;
 
 FUNCION:
-	 public_ TIPO identificador parAbre LISTA_PARAMETROS parCierra  BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
+	 public_ TIPO identificador LISTA_PARAMETROS BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $5, this._$.first_line, this._$.first_column,$4); }
 	;
 
 DECLARACION:
 	  TIPO identificador igual EXPRESION pcoma { $$= new Declaracion($1, $2, $4, this._$.first_line, this._$.first_column); }
-	| TIPO identificador pcoma { $$= new Declaracion($1, $2, null, this._$.first_line, this._$.first_column); }
+	| TIPO identificador pcoma { $$= new Declaracion($1, $2, [], this._$.first_line, this._$.first_column); }
 	;
 
 
@@ -166,13 +171,14 @@ LISTA_PARAMETROS:
 	;
 
 PARAMETRO:
-	  TIPO identificador coma { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
-	| TIPO identificador { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
+	  parAbre TIPO identificador coma parCierra { $$ = new Parametro($2, $3, this._$.first_line, this._$.first_column); }
+	| parAbre TIPO identificador parCierra { $$ = new Parametro($2, $3, this._$.first_line, this._$.first_column); }
+	| parAbre parCierra { $$ = new Parametro('', '', this._$.first_line, this._$.first_column); }
 	;
 
 BLOQUE_SENTENCIA:
 	  llaveAbre LISTA_SENTENCIAS llaveCierra { $$ = $2; }
-	| llaveAbre llaveCierra
+	| llaveAbre llaveCierra {$$ = [];}
 	;
 
 LISTA_SENTENCIAS:
@@ -190,7 +196,7 @@ SENTENCIAS:
 	| IF { $$ = $1; }
 	| PRINT { $$ = $1; }
 	| RETURN { $$ = $1; }
-	| error pcoma {
+	| error pcoma{
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 	}
 	;
@@ -222,7 +228,8 @@ DOWHILE:
 
 
 PRINT:
-	  print_ CONDICION pcoma { $$ = new Print( $2, this._$.first_line, this._$.first_column); }
+	  system_ punto_ out_ punto_ print_ CONDICION pcoma { $$ = new Print( $6, this._$.first_line, this._$.first_column); }
+	| system_ punto_ out_ punto_ println_ CONDICION pcoma { $$ = new Print( $6, this._$.first_line, this._$.first_column); }
 	;
 RETURN:
 	  return_ EXPRESION pcoma { $$ = new Return( $2, this._$.first_line, this._$.first_column); }
