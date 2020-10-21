@@ -12,7 +12,7 @@ export class Print extends Sentencia {
     }
 
     translate():string{
-        return `console.log(${this.expresion.translate()});`
+        return `console.log(${this.expresion.translate()}); \n`
     }
     getNameSon():string{
         return "PRINT";

@@ -25,8 +25,9 @@ export class AST extends Sentencia {
     getListError():string{
         let error:string = "";
         this.listaError.forEach(err => {
-            error += `Tipo:${err.tipo} - Valor:${err.valor} - Descripcion:${err.descripcion} - Ln:${err.line} - Col:${err.column}  \n`
+            error += `Error Tipo:${err.tipo} Valor:${err.valor} Descripcion:${err.descripcion} - Ln:${err.line},Col:${err.column}  \n`
         });
+        //this.listaError = new Array<NodoError>();
         return error;
     }
 

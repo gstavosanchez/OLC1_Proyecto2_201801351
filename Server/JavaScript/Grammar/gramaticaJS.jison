@@ -3,6 +3,7 @@
 	const {Type,TypeOperation} = require("../dist/ast/Tipo");
 	const {AST} = require("../dist/ast/AST");
 	const {NodoError} = require("../dist/ast/error");
+	const {Captura} = require("../dist/ast/captura");
 
 	const {Primitivo} = require("../dist/ast/expresion/Primitivo");
 	const {Identificador} = require("../dist/ast/expresion/Identificador");
@@ -117,15 +118,18 @@
 
 /lex
 
+%left 'adicion_' 'sustraccion_' 
+%left 'xor_'
 %left 'or_'
 %left 'and_'
+%left 'dobleIgual_' 'difirente_'
 %left 'mayorQ' 'menorQ' 'mayorQI' 'menorQI'
 
 
 %left 'mas' 'menos'
 %left 'por' 'division'
 
-%right 'UMENOS' 'UNOT'
+%right 'UMENOS' 'UNOT' 
 
 
 
@@ -133,7 +137,8 @@
 
 %% 
 INI : LISTA_CLASES EOF {
-		var root = new AST($1,listError)
+		var root = new AST($1,listError);
+		listError = []
 		return root;
 	}
 	| ;
@@ -145,7 +150,7 @@ LISTA_CLASES :
 
 CLASE :
 	 public_ TIPO_CLASE identificador llaveAbre LISTA_SENTENCIAS_GLBOALES llaveCierra { $$= new Class($2, $3, $5, this._$.first_line, this._$.first_column); }
-	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, [], this._$.first_line, this._$.first_column); }
+	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, null, this._$.first_line, this._$.first_column); }
 	;
 
 TIPO_CLASE:
@@ -163,6 +168,7 @@ SENTENCIAS_GLOBALES:
 	| error pcoma{
 		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+		$$ = new Captura(this._$.first_line,this._$.first_column)
 	}
 	;
 
@@ -172,7 +178,7 @@ FUNCION:
 
 DECLARACION:
 	  TIPO identificador igual EXPRESION pcoma { $$= new Declaracion($1, $2, $4, this._$.first_line, this._$.first_column); }
-	| TIPO identificador pcoma { $$= new Declaracion($1, $2, [], this._$.first_line, this._$.first_column); }
+	| TIPO identificador pcoma { $$= new Declaracion($1, $2, null, this._$.first_line, this._$.first_column); }
 	;
 
 
@@ -210,6 +216,7 @@ SENTENCIAS:
 	| error pcoma{
 		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+		$$ = new Captura(this._$.first_line,this._$.first_column)
 	}
 	;
 
@@ -254,7 +261,7 @@ EXPRESION:
 	 EXPRESION mas EXPRESION { $$ = new OperacionAritmetica( TypeOperation.SUMA, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION menos EXPRESION { $$ = new OperacionAritmetica( TypeOperation.RESTA, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION por EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MULTIPLICACION, $1, $3, this._$.first_line, this._$.first_column); }
-	//| EXPRESION adicion_ { $$ = new OperacionAritmetica.default( TypeOperation.ADICION, $1, null, this._$.first_line, this._$.first_column); } 
+	//| EXPRESION adicion_ %prec UMAS { $$ = new OperacionAritmetica.default( TypeOperation.ADICION, $1, '', this._$.first_line, this._$.first_column); } 
 	//| EXPRESION sustraccion_ { $$ = new OperacionAritmetica.default( TypeOperation.SUSTRACCION, $1, null, this._$.first_line, this._$.first_column); }  
 	| menos EXPRESION %prec UMENOS { $$ = new OperacionAritmetica( TypeOperation.NEGATIVO, $2, null, this._$.first_line, this._$.first_column); }
 		//Relacionales
@@ -262,15 +269,21 @@ EXPRESION:
 	| EXPRESION menorQI  EXPRESION { $$ = new OperacionRelacional( TypeOperation.MENOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION menorQ EXPRESION { $$ = new OperacionRelacional( TypeOperation.MENOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION mayorQ EXPRESION { $$ = new OperacionRelacional( TypeOperation.MAYOR, $1, $3, this._$.first_line, this._$.first_column); }
-	//| EXPRESION dobleIgual_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.COMPARACION, $1, $3, this._$.first_line, this._$.first_column); }
-	//| EXPRESION difirente_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.DIFERENTE, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION dobleIgual_ EXPRESION { $$ = new OperacionRelacional( TypeOperation.COMPARACION, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION difirente_ EXPRESION { $$ = new OperacionRelacional( TypeOperation.DIFERENTE, $1, $3, this._$.first_line, this._$.first_column); }
 		//Logicos
 	| EXPRESION or_ EXPRESION { $$ = new OperacionLogica( TypeOperation.OR, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION and_ EXPRESION { $$ = new OperacionLogica( TypeOperation.AND, $1, $3, this._$.first_line, this._$.first_column); }
 	| not_ EXPRESION %prec UNOT { $$ = new OperacionLogica( TypeOperation.NOT, $2, null, this._$.first_line, this._$.first_column); }
-	//| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica.default( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
+	| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| parAbre EXPRESION parCierra {$$ = $2;}
+	| CAMBIO { $$ = $1;}
 	| PRIMITIVO { $$ = $1;}
+	;
+
+CAMBIO:
+	  identificador adicion_ { $$ = new OperacionAritmetica( TypeOperation.ADICION, $1, '', this._$.first_line, this._$.first_column); }  
+	| identificador sustraccion_ { $$ = new OperacionAritmetica( TypeOperation.SUSTRACCION, $1, '', this._$.first_line, this._$.first_column); }  
 	;
 
 PRIMITIVO:
