@@ -30,4 +30,5 @@ export class For extends Sentencia {
         return data;
     }
     getNameSon():string{return "FOR"}
+    generateGrafo():void{}
 }

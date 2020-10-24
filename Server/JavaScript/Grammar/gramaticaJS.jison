@@ -173,7 +173,8 @@ SENTENCIAS_GLOBALES:
 	;
 
 FUNCION:
-	 public_ TIPO identificador LISTA_PARAMETROS BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $5, this._$.first_line, this._$.first_column,$4); }
+	 public_ TIPO identificador parAbre LISTA_PARAMETROS parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
+	| public_ TIPO identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,null); }
 	;
 
 DECLARACION:
@@ -188,9 +189,8 @@ LISTA_PARAMETROS:
 	;
 
 PARAMETRO:
-	  parAbre TIPO identificador coma parCierra { $$ = new Parametro($2, $3, this._$.first_line, this._$.first_column); }
-	| parAbre TIPO identificador parCierra { $$ = new Parametro($2, $3, this._$.first_line, this._$.first_column); }
-	| parAbre parCierra { $$ = new Parametro('', '', this._$.first_line, this._$.first_column); }
+	   TIPO identificador coma { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
+	|  TIPO identificador { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
 	;
 
 BLOQUE_SENTENCIA:

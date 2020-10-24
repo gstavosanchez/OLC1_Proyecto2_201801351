@@ -1,6 +1,7 @@
 const Grammar = require('../../Grammar/gramaticaJS.js')
 import { Request, Response } from 'express'
 import { AST } from '../ast/AST';
+import { GrafoAST } from '../ast/grafo/grafoAST';
 //import {AST} from '../ast/AST'
 
 export const analizar = (req: Request, res: Response) => {
@@ -29,13 +30,16 @@ function analiazarJava(codigo: string): Respuesta {
                 valor: `${ast.getListError()}`
             };
         } else {
+            const grafoAST = new  GrafoAST(ast);
+            const txtDot = grafoAST.getGrafo();
+            console.log(txtDot)
             return {
                 tipo: 'Translate',
                 valor: `${ast.translate()}`
             };
         }
     } catch (error) {
-        //console.log(error)
+        console.log(error)
         return {
             tipo:'Fatal',
             valor:error

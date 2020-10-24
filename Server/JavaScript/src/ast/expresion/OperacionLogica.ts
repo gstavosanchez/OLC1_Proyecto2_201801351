@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { TypeOperation } from "../Tipo";
 
@@ -34,6 +35,22 @@ export class OperacionLogica extends Sentencia {
             case TypeOperation.XOR: { return "XOR"; }
             case TypeOperation.NOT: { return "NOT"; }
             default: { return ""; }
+        }
+    }
+    generateGrafo(grafo: Grafo, padre: string):void{
+        let nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " "+nameSon +"[label=\""+this.operador1.getNameSon() + "\"];\n";
+        grafo.grafo += "  "+padre +" -> "+ nameSon+";\n";
+        grafo.contador++;
+        this.operador1.generateGrafo(grafo,nameSon);
+
+        if(this.operador2 != null || this.operador2 != ''){
+            nameSon = "nodo"+grafo.contador;
+            grafo.grafo += "  " + nameSon + "[label=\"" + this.operador2.getNameSon() + "\"];\n";
+            grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
+            grafo.contador++;
+            this.operador2.generateGrafo(grafo,nameSon);
+
         }
     }
 }

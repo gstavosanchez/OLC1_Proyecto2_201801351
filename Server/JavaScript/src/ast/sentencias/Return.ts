@@ -16,4 +16,6 @@ export class Return extends Sentencia {
     getNameSon():string{
         return "return";
     }
+
+    generateGrafo():void{}
 }

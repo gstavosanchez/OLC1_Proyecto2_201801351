@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { Type } from "../Tipo";
 
@@ -40,5 +41,53 @@ export class Class extends Sentencia {
         data += `${listaSetencias}\n`;
 
         return data+"\n}\n";
+    }
+
+    generateGrafo(grafo:Grafo,padre:string):void{
+        let padreAux = padre;
+
+        //Tipo
+        let nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " "+ nameSon + "[label = \"Tipo: " + this.type.toString() + "\"];\n";
+        grafo.grafo += " " + padre + " -> " + nameSon + ";\n";
+        grafo.contador++;
+        
+        // Id
+        nameSon = "nodo"+grafo.contador;
+        grafo.grafo += "  " + nameSon + "[label=\"ID\"];\n";
+        grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
+        grafo.contador++;
+
+        let padreHijo:string = nameSon;
+        ///Identificador
+        nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " " + nameSon + "[label=\" Id: " + this.id+ "\"];\n";
+        grafo.grafo += "  " + padreHijo + " -> " + nameSon + ";\n";
+        grafo.contador ++;
+
+        //Bloque de sentencias
+        padre = padreAux;
+        nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " "+nameSon+"[label = \"INSTRUCCIONES\"];\n";
+        grafo.grafo += " "+padre+" -> "+ nameSon + ";\n";
+        grafo.contador++;
+        padre = nameSon;
+        if(this.sentencias != null){
+            this.sentencias.forEach(value =>{
+                nameSon = "nodo"+grafo.contador;
+                grafo.grafo += "  "+nameSon +"[label=\""+value.getNameSon()+"\"];\n";
+                grafo.grafo += "  "+padre +" -> "+ nameSon +";\n";
+                grafo.contador++;
+                value.generateGrafo(grafo,nameSon);
+            });
+        }
+        
+
+
+
+        
+        
+
+
     }
 }

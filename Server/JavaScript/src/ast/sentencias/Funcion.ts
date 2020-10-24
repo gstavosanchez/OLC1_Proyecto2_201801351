@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { Type } from "../Tipo";
 
@@ -21,7 +22,7 @@ export class Funcion extends Sentencia {
         this.id = id;
         this.type = type;
         this.sentencias = sentecias;
-        if(parametro != undefined){
+        if(parametro != null){
             this.parametro = parametro;
         }else{
             this.parametro = undefined;
@@ -57,4 +58,67 @@ export class Funcion extends Sentencia {
     }
     getNameSon():string{return "FUNCION"}
 
+    generateGrafo(grafo:Grafo,padre:string):void{
+       const padreOrinal:string = padre;
+
+        //Tipo
+        let nameSon = `nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "Tipo: ${this.type.toString()}"];\n`
+        grafo.grafo += ` ${padre} -> ${nameSon};\n`;
+        grafo.contador++;
+
+        //ID
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon} [label = "ID"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
+        //Identificador;
+        padre = nameSon;
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "Id: ${this.id}"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
+
+        //Parametro
+        padre = padreOrinal;
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "PARAMETROS"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
+
+        //Lista de Parametros
+        padre = nameSon;
+        if(this.parametro != undefined || this.parametro != null){
+            this.parametro.forEach(value =>{
+                nameSon = " nodo"+grafo.contador;
+                grafo.grafo += "  "+nameSon +"[label=\""+value.getNameSon()+"\"];\n";
+                grafo.grafo += "  "+padre +" -> "+ nameSon +";\n";
+                grafo.contador++;
+                value.generateGrafo(grafo,nameSon);
+            })
+        }
+
+        //Instruccion
+        padre = padreOrinal;
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "INSTRUCCIONES"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
+        //Lista Instrucciones
+        padre = nameSon;
+        if(this.sentencias.length != 0 || this.sentencias != null ){
+            this.sentencias.forEach(value =>{
+                nameSon = " nodo"+grafo.contador;
+                grafo.grafo += "  "+nameSon +"[label=\""+value.getNameSon()+"\"];\n";
+                grafo.grafo += "  "+padre +" -> "+ nameSon +";\n";
+                grafo.contador++;
+                value.generateGrafo(grafo,nameSon);
+            });
+        }
+  
+    }
 }

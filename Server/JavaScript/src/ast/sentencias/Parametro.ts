@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { Type } from "../Tipo";
 
@@ -22,6 +23,28 @@ export class Parametro extends Sentencia {
     }
     
     public getNameSon():string{
-        return "Parametro";
+        return "PARAMETRO";
+    }
+    generateGrafo(grafo:Grafo,padre:string):void{
+        //Tipo
+        let nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "Tipo: ${this.type.toString()}"];\n`
+        grafo.grafo += ` ${padre} -> ${nameSon};\n`;
+        grafo.contador++;
+
+        //ID
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon} [label = "ID"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
+        //Identificador;
+
+        padre = nameSon;
+        nameSon = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "Id: ${this.id}"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon} ;\n`
+        grafo.contador++;
+
     }
 }

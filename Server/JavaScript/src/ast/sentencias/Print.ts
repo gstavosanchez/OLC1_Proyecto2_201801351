@@ -17,4 +17,5 @@ export class Print extends Sentencia {
     getNameSon():string{
         return "PRINT";
     }
+    generateGrafo():void{}
 }

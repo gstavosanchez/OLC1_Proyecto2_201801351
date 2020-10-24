@@ -1,3 +1,5 @@
+import { Grafo } from "./grafo/grafo";
+
 export abstract class Sentencia {
     private linea:number;
     private column:number;
@@ -11,4 +13,5 @@ export abstract class Sentencia {
 
     abstract translate():string;
     abstract getNameSon():string;
+    abstract generateGrafo(g:Grafo,padre:string):void;
 }

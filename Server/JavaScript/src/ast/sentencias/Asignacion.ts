@@ -21,4 +21,5 @@ export class Asignacion extends Sentencia{
     getNameSon():string{
         return 'ASIGNACION';
     }
+    generateGrafo():void{}
 }

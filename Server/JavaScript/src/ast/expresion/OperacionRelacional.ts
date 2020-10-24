@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { TypeOperation } from "../Tipo";
 
@@ -40,5 +41,19 @@ export class OperacionRelacional extends Sentencia {
             case TypeOperation.DIFERENTE: {return "DIFERENCIA"}
             default:return "";
         }
+    }
+    generateGrafo(grafo:Grafo,padre:string):void{
+        let nombreHijo = "nodo"+grafo.contador;
+        grafo.grafo += "  "+nombreHijo +"[label=\""+this.operador1.getNameSon() + "\"];\n";
+        grafo.grafo += "  "+padre +" -> "+ nombreHijo+";\n";
+        grafo.contador++;
+        this.operador1.generateGrafo(grafo,nombreHijo);
+        
+        //Operador2
+        nombreHijo = "nodo"+grafo.contador;
+        grafo.grafo += "  "+nombreHijo +"[label=\""+this.operador2.getNameSon() + "\"];\n";
+        grafo.grafo += "  "+padre +" -> "+ nombreHijo+";\n";
+        grafo.contador++;
+        this.operador2.generateGrafo(grafo,nombreHijo);
     }
 }

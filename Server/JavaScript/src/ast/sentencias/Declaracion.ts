@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 import { Type } from "../Tipo";
 
@@ -29,5 +30,38 @@ export class Declaracion extends Sentencia {
     
     public getNameSon():string{
         return "DECLARACION";
+    }
+
+    generateGrafo(grafo:Grafo,padre:string):void{
+        let padreAux = padre;
+
+        //Tipo
+        let nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " "+ nameSon + "[label = \"Tipo: " + this.type.toString() + "\"];\n";
+        grafo.grafo += " " + padre + " -> " + nameSon + ";\n";
+        grafo.contador++;
+        
+        // Id
+        nameSon = "nodo"+grafo.contador;
+        grafo.grafo += "  " + nameSon + "[label=\"ID\"];\n";
+        grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
+        grafo.contador++;
+
+        let padreHijo:string = nameSon;
+        ///Identificador
+        nameSon = "nodo"+grafo.contador;
+        grafo.grafo += " " + nameSon + "[label=\" Id: " + this.id + "\"];\n";
+        grafo.grafo += "  " + padreHijo + " -> " + nameSon + ";\n";
+        grafo.contador ++;
+
+        //Expresion
+        if(this.valor != null){
+            nameSon = "nodo"+grafo.contador;
+            grafo.grafo += "  " + nameSon + "[label=\"" + this.valor.getNameSon() + "\"];\n";
+            grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
+            grafo.contador++;
+            this.valor.generateGrafo(grafo, nameSon);
+        }
+
     }
 }

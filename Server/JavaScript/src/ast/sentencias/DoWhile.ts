@@ -23,4 +23,5 @@ export class DoWhile extends Sentencia {
         return data;
     }
     getNameSon():string{return "DOWHILE"}
+    generateGrafo():void{}
 }

@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 
 export class Primitivo extends Sentencia {
@@ -15,6 +16,13 @@ export class Primitivo extends Sentencia {
     }
     getNameSon():string{
         return "PRIMITIVO";
+        
+    }
+    generateGrafo(grafo:Grafo,padre:string):void{
+        let nameSon = "nodo"+grafo.contador;
+        grafo.grafo += "  "+nameSon +"[label=\""+ this.valor.toString() +"\"];\n";
+        grafo.grafo += "  "+padre +" -> "+ nameSon+";\n";
+        grafo.contador++;
         
     }
 }

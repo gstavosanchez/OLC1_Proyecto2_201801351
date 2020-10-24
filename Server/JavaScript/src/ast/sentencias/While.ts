@@ -25,4 +25,5 @@ export class While extends Sentencia {
     getNameSon():string{
         return "WHILE";
     }
+    generateGrafo():void{}
 }

@@ -46,4 +46,5 @@ export class If extends Sentencia {
     getNameSon():string{
         return "IF";
     }
+    generateGrafo():void{}
 }
