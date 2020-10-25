@@ -31,3 +31,21 @@ export enum TypeOperation{
     XOR,
     NEGACION
 }
+
+export const translateType = (tipo:Type):string => {
+    switch(tipo){
+        case Type.INT : return "int";
+        case Type.STRING : return "string";
+        case Type.BOOLEAN : return "boolean";
+        case Type.VOID : return "void";
+        case Type.DOUBLE : return "double";
+        case Type.FLOAT : return "float";
+        case Type.CHAR : return "char";
+        case Type.INTERFACE : return "interface";
+        case Type.MAIN : return "main";
+        case Type.CLASS : return "class";
+        default: return '';
+
+    }
+    
+}

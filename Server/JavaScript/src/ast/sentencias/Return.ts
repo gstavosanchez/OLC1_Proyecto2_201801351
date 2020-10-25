@@ -1,3 +1,4 @@
+import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
 
 export class Return extends Sentencia {
@@ -14,8 +15,14 @@ export class Return extends Sentencia {
         return `return (${this.sentencia.translate()});`
     }
     getNameSon():string{
-        return "return";
+        return "RETURN";
     }
 
-    generateGrafo():void{}
+    generateGrafo(grafo:Grafo,padre:string):void{
+        const nameSon:string = ` nodo${grafo.contador}`;
+        grafo.grafo += ` ${nameSon}[label = "${this.sentencia.getNameSon()}"];\n`;
+        grafo.grafo += ` ${padre} -> ${nameSon};\n`;
+        grafo.contador++;
+        this.sentencia.generateGrafo(grafo,nameSon);
+    }
 }

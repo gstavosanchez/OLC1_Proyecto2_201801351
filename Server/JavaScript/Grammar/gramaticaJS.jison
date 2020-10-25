@@ -10,6 +10,7 @@
 	const {OperacionAritmetica} = require("../dist/ast/expresion/OperacionAritmetica");
 	const {OperacionLogica} = require("../dist/ast/expresion/OperacionLogica");
 	const {OperacionRelacional} = require("../dist/ast/expresion/OperacionRelacional");
+	const {Cambio} = require("../dist/ast/expresion/cambio");
 
 	const {Asignacion} = require("../dist/ast/sentencias/Asignacion");
 	const {Class} = require("../dist/ast/sentencias/Class");
@@ -47,6 +48,7 @@
 "boolean"			return 'boolean_';
 "char"				return 'char_';
 "float"				return 'float_';
+"double"				return 'double_';
 "void"				return 'void_';
 
 "print"				return 'print_';
@@ -67,6 +69,7 @@
 "static"			return 'static_';
 "else"				return 'else_';
 "do"				return 'do_';
+"for"				return 'for_';
 
 
 "=="				return 'dobleIgual_';
@@ -213,6 +216,7 @@ SENTENCIAS:
 	| IF { $$ = $1; }
 	| PRINT { $$ = $1; }
 	| RETURN { $$ = $1; }
+	| CAMBIO { $$ = $1;}
 	| error pcoma{
 		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
@@ -232,7 +236,7 @@ CONDICION:
 	;
 
 FOR:
-	 for_ parAbre DECLARACION pcoma EXPRESION pcoma EXPRESION parCierra BLOQUE_SENTENCIA { $$ = new For($3, $5, $7, $9, this._$.first_line, this._$.first_column); }
+	 for_ parAbre DECLARACION  EXPRESION pcoma CAMBIO parCierra BLOQUE_SENTENCIA { $$ = new For($3, $4, $6, $8, this._$.first_line, this._$.first_column); }
 	;
 
 IF:
@@ -277,13 +281,14 @@ EXPRESION:
 	| not_ EXPRESION %prec UNOT { $$ = new OperacionLogica( TypeOperation.NOT, $2, null, this._$.first_line, this._$.first_column); }
 	| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| parAbre EXPRESION parCierra {$$ = $2;}
-	| CAMBIO { $$ = $1;}
 	| PRIMITIVO { $$ = $1;}
 	;
 
 CAMBIO:
-	  identificador adicion_ { $$ = new OperacionAritmetica( TypeOperation.ADICION, $1, '', this._$.first_line, this._$.first_column); }  
-	| identificador sustraccion_ { $$ = new OperacionAritmetica( TypeOperation.SUSTRACCION, $1, '', this._$.first_line, this._$.first_column); }  
+	  identificador adicion_ pcoma { $$ = new Cambio( TypeOperation.ADICION, $1, true, this._$.first_line, this._$.first_column); }  
+	| identificador sustraccion_ pcoma { $$ = new Cambio( TypeOperation.SUSTRACCION, $1, true, this._$.first_line, this._$.first_column); }  
+	| identificador adicion_  { $$ = new Cambio( TypeOperation.ADICION, $1, false, this._$.first_line, this._$.first_column); }  
+	| identificador sustraccion_ { $$ = new Cambio( TypeOperation.SUSTRACCION, $1, false, this._$.first_line, this._$.first_column); }  
 	;
 
 PRIMITIVO:

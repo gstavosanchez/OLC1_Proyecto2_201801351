@@ -1,6 +1,6 @@
 import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
-import { Type } from "../Tipo";
+import { translateType, Type } from "../Tipo";
 
 export class Funcion extends Sentencia {
     private type:Type;
@@ -63,7 +63,7 @@ export class Funcion extends Sentencia {
 
         //Tipo
         let nameSon = `nodo${grafo.contador}`;
-        grafo.grafo += ` ${nameSon}[label = "Tipo: ${this.type.toString()}"];\n`
+        grafo.grafo += ` ${nameSon}[label = "Tipo: ${translateType(this.type)}"];\n`
         grafo.grafo += ` ${padre} -> ${nameSon};\n`;
         grafo.contador++;
 

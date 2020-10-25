@@ -1,6 +1,6 @@
 import { Grafo } from "../grafo/grafo";
 import { Sentencia } from "../Sentencia";
-import { Type } from "../Tipo";
+import { Type,translateType } from "../Tipo";
 
 export class Parametro extends Sentencia {
 
@@ -28,7 +28,7 @@ export class Parametro extends Sentencia {
     generateGrafo(grafo:Grafo,padre:string):void{
         //Tipo
         let nameSon = ` nodo${grafo.contador}`;
-        grafo.grafo += ` ${nameSon}[label = "Tipo: ${this.type.toString()}"];\n`
+        grafo.grafo += ` ${nameSon}[label = "Tipo: ${translateType(this.type)}"];\n`
         grafo.grafo += ` ${padre} -> ${nameSon};\n`;
         grafo.contador++;
 
