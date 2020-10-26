@@ -1,6 +1,7 @@
 //const url = "http://localhost:3000/code"
 
 const url = "http://localhost:4000/analyze"
+const urlUpload = "http://localhost:4000/upload"
 
 
 async function analizar(){
@@ -48,10 +49,43 @@ function setConsolOutputJS(response){
 }
 
 
-function openFile(){
-
-  console.log('hola')
+async function openFile(value){
+  const formData = new FormData();
+  formData.append('file',value);
+  
+  const res = await axios.post(urlUpload,formData,{
+    headers:{
+      'Content-Type': 'multipart/form-data'
+    }
+  });
 
   
-
+    
+  let console = ace.edit("Editor");
+  console.getSession().setValue('');
+  if(res.data.code){
+    console.getSession().setValue(res.data.code);
+  }else{
+    alert(`${res.data.Error}`);
+  } 
+  
 }
+
+
+const fileData = document.getElementById('upload');
+
+fileData.addEventListener('change',async (e) =>{
+  const file = e.target.files[0];
+  if(file){
+    await openFile(file)
+  }else{
+    alert('No open file');
+  }
+  
+});
+
+
+
+
+
+

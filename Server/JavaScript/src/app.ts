@@ -1,6 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import path from 'path'
 
 import analizadorRoutes from './routes/analizador.routes'
 
@@ -23,5 +24,7 @@ app.get('/',(req,res )=>{
 })
 
 app.use(analizadorRoutes);
+//Folder 
+app.use('/uploads',express.static(path.resolve('uploads')));
 
 export default app;
