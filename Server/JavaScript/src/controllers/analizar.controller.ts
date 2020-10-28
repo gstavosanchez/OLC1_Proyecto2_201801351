@@ -7,6 +7,10 @@ import fs from 'fs-extra'
 import child_process from 'child_process'
 import {v4 as uuidv4 } from 'uuid'
 
+
+//Contenedor de dokcer ->  docker run -p 4000:4000 -it appjs bash
+///docker build -t appjs .
+
 type Respuesta = {
     tipo: string
     valor: string
