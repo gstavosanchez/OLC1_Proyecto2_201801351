@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-primary">
         <a class="navbar-brand" href="/client/"><h2>Translate App</h2></a>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -25,11 +25,10 @@
                     <form>
                         <input type="file" accept="application/txt, .java" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
                         <a class="dropdown-item" href="" onclick="document.getElementById('upload').click(); return false">Abrir</a>
-                        <button type="button" class="dropdown-item"" onclick="openFile()">Cargar</button>
                     </form>
                   <a class="dropdown-item" href="#">Nuevo</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Guardar</a>
+                  <a class="dropdown-item" href="" download="translateJS.js">Guardar</a>
                   <a class="dropdown-item" href="#">Guardar Como</a>
                 </div>
               </li>
@@ -39,7 +38,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="#">Ambos</a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">JavaScipt</a>
+                  <a class="dropdown-item" href="" download="js.javascript">JavaScipt</a>
                   <a class="dropdown-item" href="#">Python</a>
                 </div>
               </li>
@@ -57,8 +56,6 @@
                 <div class="card-header"><span class="glyphicon glyphicon-user" /> 201801351</div>
               </div>
         </div>
-
-        
 
         <ul class="nav nav-tabs">
             <li class="nav-item">

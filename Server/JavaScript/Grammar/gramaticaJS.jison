@@ -144,7 +144,12 @@ INI : LISTA_CLASES EOF {
 		listError = []
 		return root;
 	}
-	| ;
+	| error {
+		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
+		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+		$$ = new Captura(this._$.first_line,this._$.first_column)
+	}
+	;
 
 LISTA_CLASES :
 	 LISTA_CLASES CLASE { $1.push($2); $$ = $1;}
@@ -154,6 +159,11 @@ LISTA_CLASES :
 CLASE :
 	 public_ TIPO_CLASE identificador llaveAbre LISTA_SENTENCIAS_GLBOALES llaveCierra { $$= new Class($2, $3, $5, this._$.first_line, this._$.first_column); }
 	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, null, this._$.first_line, this._$.first_column); }
+	| error pcoma{
+		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
+		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
+		$$ = new Captura(this._$.first_line,this._$.first_column)
+	}
 	;
 
 TIPO_CLASE:
@@ -194,6 +204,7 @@ LISTA_PARAMETROS:
 PARAMETRO:
 	   TIPO identificador coma { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
 	|  TIPO identificador { $$ = new Parametro($1, $2, this._$.first_line, this._$.first_column); }
+	
 	;
 
 BLOQUE_SENTENCIA:
@@ -204,6 +215,7 @@ BLOQUE_SENTENCIA:
 LISTA_SENTENCIAS:
 	  LISTA_SENTENCIAS SENTENCIAS { $1.push($2); $$ = $1;} 
 	| SENTENCIAS { $$ = [$1]}
+
 	;
 
 
