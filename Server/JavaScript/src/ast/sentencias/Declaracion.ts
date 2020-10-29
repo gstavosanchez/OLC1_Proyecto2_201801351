@@ -4,13 +4,13 @@ import { Type,translateType } from "../Tipo";
 
 export class Declaracion extends Sentencia {
 
-    id:string;
+    id:Array<Sentencia>;
     valor:Sentencia;
     type:Type;
 
     constructor(
         type:Type,
-        id:string,
+        id:Array<Sentencia>,
         valor:Sentencia,
         linea:number,
         column:number
@@ -22,10 +22,48 @@ export class Declaracion extends Sentencia {
     }
 
     translate():string{
-        if(this.valor == null) return `var ${this.id}; \n`;
-        if(this.type == Type.STRING && this.valor != null ) return `var ${this.id} = "${this.valor.translate()}";\n`
-        if(this.type == Type.CHAR && this.valor != null ) return `var ${this.id} = '${this.valor.translate()}';\n`  
-        return `var ${this.id} = ${this.valor.translate()}; \n`;
+        if(this.valor == null){
+            let listId:string = "";
+            this.id.forEach((valor,index) => {
+                if(index+1 == this.id.length){
+                    listId += `${valor.translate()}`
+                }else{
+                    listId += `${valor.translate()},`
+                }
+            });
+            return `var ${listId}; \n`
+        } else if(this.type == Type.STRING && this.valor != null){
+            let listId:string = "";
+            this.id.forEach((valor,index) => {
+                if(index + 1 == this.id.length){
+                    listId += `${valor.translate()}`
+                }else{
+                    listId += `${valor.translate()},`
+                }
+            });
+            return `var ${listId} = "${this.valor.translate()}";\n`
+        } else if(this.type == Type.CHAR && this.valor != null){
+            let listId:string = "";
+            this.id.forEach((valor,index) => {
+                if(index + 1 == this.id.length){
+                    listId += `${valor.translate()}`
+                }else{
+                    listId += `${valor.translate()},`
+                }
+            });
+            return `var ${listId} = '${this.valor.translate()}';\n`
+        }else{
+            let listId:string = "";
+            this.id.forEach((valor,index) => {
+                if(index + 1 == this.id.length){
+                    listId += `${valor.translate()}`
+                }else{
+                    listId += `${valor.translate()},`
+                }
+            });
+            return `var ${listId} = ${this.valor.translate()} ;\n`
+        }
+        
     }
     
     public getNameSon():string{
@@ -34,25 +72,29 @@ export class Declaracion extends Sentencia {
 
     generateGrafo(grafo:Grafo,padre:string):void{
         let padreAux = padre;
-
+        
         //Tipo
         let nameSon = "nodo"+grafo.contador;
         grafo.grafo += " "+ nameSon + "[label = \"Tipo: " + translateType(this.type) + "\"];\n";
         grafo.grafo += " " + padre + " -> " + nameSon + ";\n";
         grafo.contador++;
         
-        // Id
-        nameSon = "nodo"+grafo.contador;
-        grafo.grafo += "  " + nameSon + "[label=\"ID\"];\n";
-        grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
-        grafo.contador++;
+  
 
-        let padreHijo:string = nameSon;
+
+        let padreHijo:string = padre;
         ///Identificador
-        nameSon = "nodo"+grafo.contador;
-        grafo.grafo += " " + nameSon + "[label=\" Id: " + this.id + "\"];\n";
-        grafo.grafo += "  " + padreHijo + " -> " + nameSon + ";\n";
-        grafo.contador ++;
+        
+        if(this.id.length != 0 || this.id != null){
+            this.id.forEach(valor => {
+                nameSon = "nodo"+grafo.contador;
+                grafo.grafo += " " + nameSon + "[label=\" " + valor.getNameSon() + "\"];\n";
+                grafo.grafo += "  " + padreHijo + " -> " + nameSon + ";\n";
+                grafo.contador ++;
+                valor.generateGrafo(grafo,nameSon);
+
+            });
+        }
 
         //Expresion
         if(this.valor != null){

@@ -186,15 +186,23 @@ SENTENCIAS_GLOBALES:
 	;
 
 FUNCION:
-	 public_ TIPO identificador parAbre LISTA_PARAMETROS parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
-	| public_ TIPO identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,null); }
+	  public_ TIPOFUNCION identificador parAbre LISTA_PARAMETROS parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
+	| public_ TIPOFUNCION identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,null); }
+	| public_ static_ void_ main_ parAbre string_ corchetes args_ parCierra BLOQUE_SENTENCIA { $$= new Funcion(Type.MAIN, 'main', $10, this._$.first_line, this._$.first_column,null); }
 	;
 
 DECLARACION:
-	  TIPO identificador igual EXPRESION pcoma { $$= new Declaracion($1, $2, $4, this._$.first_line, this._$.first_column); }
-	| TIPO identificador pcoma { $$= new Declaracion($1, $2, null, this._$.first_line, this._$.first_column); }
+	  TIPO LISTA_ID igual EXPRESION pcoma { $$= new Declaracion($1, $2, $4, this._$.first_line, this._$.first_column); }
+	| TIPO LISTA_ID pcoma { $$= new Declaracion($1, $2, null, this._$.first_line, this._$.first_column); }
 	;
-
+LISTA_ID:
+	  LISTA_ID ID { $1.push($2); $$ = $1;} 
+	| ID { $$ = [$1]}
+	;
+ID:
+	 identificador coma { $$ = new Identificador( $1, this._$.first_line, this._$.first_column); }
+	| identificador { $$ = new Identificador( $1, this._$.first_line, this._$.first_column); }
+	;
 
 LISTA_PARAMETROS:
 	  LISTA_PARAMETROS PARAMETRO { $1.push($2); $$ = $1;} 
@@ -309,11 +317,20 @@ PRIMITIVO:
 	| caracter { $$ = new Primitivo( $1, this._$.first_line, this._$.first_column); }
 	| true_ { $$ = new Primitivo( true, this._$.first_line, this._$.first_column); }
 	| false_ { $$ = new Primitivo( false, this._$.first_line, this._$.first_column); }
-	| identificador { $$ = new Primitivo( $1, this._$.first_line, this._$.first_column); }
+	| identificador { $$ = new Identificador( $1, this._$.first_line, this._$.first_column); }
 	;
 
 
 TIPO:
+	 int_ {$$ = Type.INT}
+	| string_ {$$ = Type.STRING}
+	| double_ {$$ = Type.DOUBLE}
+	| float_ {$$ = Type.FLOAT}
+	| char_ {$$ = Type.CHAR}
+	| boolean_ {$$ = Type.BOOLEAN}
+	;
+
+TIPOFUNCION:
 	 int_ {$$ = Type.INT}
 	| string_ {$$ = Type.STRING}
 	| double_ {$$ = Type.DOUBLE}

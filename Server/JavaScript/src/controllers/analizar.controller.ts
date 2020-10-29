@@ -101,11 +101,11 @@ async function generateDOT(data:string):Promise<string>{
     const ruta:string = `uploads/${id}`
     const rutaABS:string = path.resolve(ruta);
     //console.log(rutaABS)
-    const command:string = `dot -Tsvg ${rutaABS}.dot -o ${rutaABS}.svg`;
-    //console.log(`Comando:${command}`)
+    //const command:string = `dot -Tsvg ${rutaABS}.dot -o ${rutaABS}.svg`;
+    const command:string = `dot -Tpdf ${rutaABS}.dot -o ${rutaABS}.pdf`;
     child_process.exec(command);
     //await fs.unlink(`${rutaABS}.dot`);
-    return `${id}.svg`;
+    return `${id}.pdf`;
     
     
 }
