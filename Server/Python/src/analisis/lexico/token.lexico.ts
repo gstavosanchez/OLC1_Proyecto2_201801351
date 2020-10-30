@@ -44,7 +44,7 @@ export enum TypeToken {
     INTERFACE_,
     RETURN_,
     BREAK_,
-    CONTINUEW_,
+    CONTINUE_,
     MAIN_,
     ARG_,
     PUBLIC_,

@@ -14,4 +14,7 @@ const initAnalisis = (cadena:string) =>{
     const lexico:AnalizadorLexico = new AnalizadorLexico();
     console.log("----------------->Inicio Analisis lexico <------------------------")
     const listToken:Array<Token> =  lexico.analizar(cadena);
+    listToken.forEach((token,index) => {
+        console.log(`No:${index},Tipo:${token.getType()},valor:${token.getLexema()}`)
+    });
 }
