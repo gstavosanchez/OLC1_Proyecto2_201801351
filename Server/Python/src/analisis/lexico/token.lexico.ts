@@ -79,3 +79,12 @@ export class Token {
         return this.lexema;
     }
 }
+
+export const translateType = (type:TypeToken):string => {
+    switch(type){
+        case TypeToken.LLABRE: return "{";
+        case TypeToken.LLCIERRA:return "}";
+        case TypeToken.PABRE:return "(";
+        default : return "Error"
+    }
+}

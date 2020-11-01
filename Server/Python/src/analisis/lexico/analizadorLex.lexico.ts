@@ -46,7 +46,7 @@ export class AnalizadorLexico {
         for (index; index < this.entrada.length; index++) {
             const c:string = this.entrada.charAt(index);
             if(c == " " || c == "(" || c == ")" || c == "{" || c == "}" || c == "\n" || c == "\t" 
-                || c == ";" || c == "\r" || c == "=" || c == "."){
+                || c == ";" || c == "\r" || c == "=" || c == "." || c == ","){
                 if(c == "\n"){
                     this.linea ++;
                     this.column = 1;
@@ -61,6 +61,22 @@ export class AnalizadorLexico {
         }
         return longitud;
     
+    }
+    private getSizeString(index:number):number{
+        let longitud:number = 0;
+        for (index; index < this.entrada.length; index++) {
+            const c:string = this.entrada.charAt(index);
+            if(c == `"`){
+                break;
+            }
+            longitud++;
+        }
+        return longitud;
+    
+    }
+    private auxSimbolo(c:string):boolean{
+        if(c == ";" || c == "(" || c == ")" ||  c == "{" || c == "}" || c == "=") return true;
+        return false;
     }
     private getSizeLexemaNumber(index:number):number{
         let longitud:number = 0;
@@ -77,11 +93,15 @@ export class AnalizadorLexico {
                     this.column += 4;
                 }
                 break;
+                
             }
             longitud++;
         }
         return longitud;
     
+    }
+    public getListError():Array<ErrorAnalisis>{
+        return this.listError;
     }
     // ----------------------------------------------------------------------------------------------------------------
     // --------------------------------> Inicio del analasis lexico <--------------------------------------------------
@@ -119,15 +139,26 @@ export class AnalizadorLexico {
                 this.setTokenList(TypeToken.DPUNTOS,caracterActual);
             }else if(caracterActual == "="){
                 this.setTokenList(TypeToken.IGUAL,caracterActual);
+            }else if(caracterActual == ","){
+                this.setTokenList(TypeToken.COMA,caracterActual);
             // -----------------> Palabres reservadas, id <--------------------------------
             }else if(this.isLetter(caracterActual)){
                 const sizeLex:number = this.getSizeLexema(index);
                 this.q1(index,index+sizeLex);
                 index += sizeLex;
+                continue
             }else if(this.isNumber(caracterActual)){
                 const sizeLex:number = this.getSizeLexemaNumber(index);
                 this.q4(index,index+sizeLex);
                 index += sizeLex;
+                continue
+                
+            }else if(caracterActual == `"`){
+                const sizeLex:number = this.getSizeString(index + 1);
+                this.q3(index,index + sizeLex+2);
+                index += sizeLex +2;
+                continue
+
             }else if(caracterActual == " " || caracterActual == '\n' || caracterActual == '\t' || caracterActual == "\r"){
                 if( caracterActual == "\n"){
                     this.linea ++;
@@ -141,7 +172,7 @@ export class AnalizadorLexico {
                 continue
             }else{
                 if(caracterActual == "$" && index == this.entrada.length - 1){
-
+                    break;
                 }else{
                     this.setErroList(this.linea,this.column,caracterActual);
                 }
@@ -320,6 +351,8 @@ export class AnalizadorLexico {
     // -------------> Para valor de string <----------------------
     private q3(actual:number,fin:number){
         const lexema:string = this.entrada.substring(actual,fin);
+        //console.log(lexema)
+        this.column += (lexema.length);
         this.setTokenList(TypeToken.VALOR,lexema);
     }
 

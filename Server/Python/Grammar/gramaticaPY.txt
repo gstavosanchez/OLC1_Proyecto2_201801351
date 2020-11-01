@@ -1,0 +1,27 @@
+<Inicio> -> <Def_Clase><Otra_clase>
+
+<Otra_clase> -> <Inicio>
+               | Epsilon
+
+<Def_Clase> -> tk_public <Tipo_Class> tk_id tk_llAbre <List_Var> tk_llCierra
+
+<Tipo_Class> -> tk_class
+              | tk_interface
+
+<List_Var> -> <Def_Tipo_Var> <Otro_Tipo_Var>
+
+<Def_Tipo_Var> -> <Tipo> tk_id <Otra_Var> tk_pcoma
+
+<Otra_Var> -> tk_coma tk_id <Otra_Var>
+            | Epsilon
+
+<Tipo> -> tk_int
+        | tk_string
+        | tk_double
+        | tk_char
+        | tk_float
+        | tk_boolean
+
+<Otro_Tipo_Var> -> <List_Var>
+                | Epsilon
+
