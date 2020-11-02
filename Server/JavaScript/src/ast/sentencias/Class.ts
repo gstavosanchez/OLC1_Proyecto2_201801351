@@ -30,8 +30,8 @@ export class Class extends Sentencia {
     getNameSon():string{return "CLASS"}
 
     private getTranslateClass(tipo:string):string{
-        if(this.sentencias == null && tipo == "class"|| this.sentencias.length == 0 && tipo == "class") return `class ${this.id} {}`
-        if(this.sentencias == null && tipo == "interface"|| this.sentencias.length == 0 && tipo == "interface") return `interface ${this.id} {}`
+        if(this.sentencias.length == 0 && tipo == "class" || this.sentencias == null && tipo == "class") return `class ${this.id} {}`
+        if(this.sentencias.length == 0 && tipo == "interface" || this.sentencias == null && tipo == "interface") return `interface ${this.id} {}`
 
         let data:string = `${tipo} ${this.id} {\n`
         let listaSetencias:string  = ""

@@ -182,11 +182,12 @@ export class AnalizadorLexico {
             index++;
         }
         if(this.listError.length != 0){
-            console.log('------------------------>Errores Lexicos <---------------------------------------')
+           /* console.log('------------------------>Errores Lexicos <---------------------------------------')
             this.listError.forEach(valor => {
                 console.log(`Caracter:${valor.getCaracter()}, Ln ${valor.getLinea()}, Col ${valor.getColumn()}`)
             });
             console.log('------------------------>-----------------<---------------------------------------')
+            */
         }
     }
     // -------------> Palabras Reservadas, ID <----------------------

@@ -11,6 +11,15 @@ export class AnalizadorSintactico {
         this.listToken = list;
         this.preAnalisis = -1;
     }
+    /*   Metod Auxiliar verificar si de declara una var      */
+
+    public auxDeclarVar(numerAnalisis: number): boolean {
+        if (numerAnalisis == TypeToken.STRING_ || numerAnalisis == TypeToken.INT_ || numerAnalisis == TypeToken.DOUBLE_
+            || numerAnalisis == TypeToken.CHAR_ || numerAnalisis == TypeToken.FLOAT_ || numerAnalisis == TypeToken.BOOLEAN_) {
+            return true
+        }
+        return false;
+    }
     // -------------> Meto de Parea 
     private parea(terminal: TypeToken): void {
         if (this.index >= this.listToken.length) {
@@ -94,19 +103,26 @@ export class AnalizadorSintactico {
         this.otroTipoVar();
     }
     /*
-        <Def_Tipo_Var> -> <Tipo> tk_id <Otra_Var> tk_pcoma
+        <Def_Tipo_Var> -> <Tipo> tk_id <Otra_Var>  <Expresion> tk_pcoma
+                
     */
     private defTipoVar(): void {
-        this.tipo();
-        if (this.preAnalisis == TypeToken.ID) {
-            this.parea(TypeToken.ID);
-            this.otraVar();
-            this.parea(TypeToken.PCOMA);
+        if (this.auxDeclarVar(this.preAnalisis)) {
+            this.tipo();
+            if (this.preAnalisis == TypeToken.ID) {
+                this.parea(TypeToken.ID);
+                this.otraVar();
+                this.expresion();
+                this.parea(TypeToken.PCOMA);
+            } else {
+                /*      Error Sintactico     */
+                //console.log('Error sintactico id, no se espera token en esa posicion');
+                //console.log(`Token Incorrcto: ${this.listToken[this.index].getLexema()}`);
+            }
         } else {
-            /*      Error Sintactico     */
-            console.log('Error sintactico id, no se espera token en esa posicion');
-            console.log(`Token Incorrcto: ${this.listToken[this.index].getLexema()}`);
+
         }
+
     }
     /*
         <Otra_Var> -> tk_coma tk_id <Otra_Var>
@@ -127,7 +143,7 @@ export class AnalizadorSintactico {
                     | Epsilon
     */
     private otroTipoVar(): void {
-        if (!this.aux(this.preAnalisis)) {
+        if (!this.auxDeclarVar(this.preAnalisis)) {
 
             /*     Epsilon     */
 
@@ -165,15 +181,82 @@ export class AnalizadorSintactico {
         }
     }
 
+    /*
+        <Expresion> -> tk_igual <T> <ExpresionPrima>
+    */
 
-    /*   Metod Auxiliar      */
-
-    public aux(numerAnalisis: number): boolean {
-        if (numerAnalisis == TypeToken.STRING_ || numerAnalisis == TypeToken.INT_ || numerAnalisis == TypeToken.DOUBLE_
-            || numerAnalisis == TypeToken.CHAR_ || numerAnalisis == TypeToken.FLOAT_ || numerAnalisis == TypeToken.BOOLEAN_) {
-            return true
+    private expresion(): void {
+        if(this.preAnalisis == TypeToken.IGUAL){
+            this.parea(TypeToken.IGUAL)
+            this.t();
+            this.expresionPrima();
         }
-        return false;
+        
     }
+    /*
+        <ExpresionPrima> -> tk_mas <T> <ExpresionPrima>
+                | tk_menos <T> <ExpresionPrima>
+                | Epsilon
+    */
+    private expresionPrima(): void {
+        if(this.preAnalisis == TypeToken.MAS){
+            this.parea(TypeToken.MAS);
+            this.t();
+            this.expresionPrima();
+        }else if(this.preAnalisis == TypeToken.MENOS){
+            this.parea(TypeToken.MENOS);
+            this.t();
+            this.expresionPrima();
+        }else{
+            /*   Epsilon   */
+        }
+    }
+    /*
+        <T> -> <F> <TPrima>
+    */
+    private t(): void {
+        this.f();
+        this.tPrima();
+    }
+    /*
+        <TPrima> -> tk_por <F> <TPrima>
+          |  tk_division <F> <TPrima>
+          | Epsilon
+    */
+    private tPrima(): void {    
+        if(this.preAnalisis == TypeToken.POR){
+            this.parea(TypeToken.POR);
+            this.f();
+            this.tPrima();
+        }else if(this.preAnalisis == TypeToken.DIVISION){
+            this.parea(TypeToken.DIVISION);
+            this.f();
+            this.tPrima();
+        }else{
+
+        }
+    }
+    /*
+        <F> -> tk_pabre <Expresion> tk_pcierra
+        | num
+        | id
+    */
+    private f(): void {
+        if(this.preAnalisis == TypeToken.PABRE){
+            this.parea(TypeToken.PABRE);
+            this.expresion();
+            this.parea(TypeToken.PCIERRA);
+        }else if(this.preAnalisis == TypeToken.VALOR){
+            this.parea(TypeToken.VALOR);
+        }else if(this.preAnalisis == TypeToken.ID){
+            this.parea(TypeToken.ID)
+        }else{
+            console.log('Error sintactico en <F>,  no se espera token en esa posicion');
+            console.log(`Token Incorrcto: ${this.listToken[this.index].getLexema()}`);
+        }
+    }
+
+
+
 
 }

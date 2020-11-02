@@ -1,4 +1,4 @@
-const urlPY = "http://localhost:5000/";
+const urlPY = "http://localhost:5000";
 const url = "http://localhost:4000/analyze";
 const urlUpload = "http://localhost:4000/upload";
 
@@ -9,7 +9,9 @@ async function analizar() {
   const jtxtJSharp = ace.edit("Editor");
   const entrada = jtxtJSharp.getSession().getValue();
   //console.log(entrada);
+  await setCodePython(entrada);
   await setCode(entrada);
+  
 }
 
 async function setCode(texto) {
@@ -30,7 +32,8 @@ async function setCode(texto) {
   if(res.data.tipo == "Translate"){
     consola.getSession().setValue(res.data.valor);
     const imgURL = `http://localhost:4000/uploads/${res.data.img}`
-    window.open(imgURL);
+    setTimeout(window.open(imgURL),3000);
+    //window.open(imgURL);
   }else if(res.data.Error){
     consola.getSession().setValue(res.data.Error);
   }else{
@@ -69,4 +72,20 @@ fileData.addEventListener("change", async (e) => {
   }
 });
 
-function dowloandJS() {}
+const setCodePython = async (texto) => {
+  const codeJava = {
+    code: texto,
+  };
+  const data = JSON.stringify(codeJava);
+
+  const res = await axios.post(`${urlPY}/analizar`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  //console.log(res)
+  let consola = ace.edit("ConsoleTwo");
+  consola.getSession().setValue("");
+  consola.getSession().setValue(res.data.valor);
+}

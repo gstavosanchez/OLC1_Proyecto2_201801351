@@ -22,7 +22,7 @@ export class Funcion extends Sentencia {
         this.id = id;
         this.type = type;
         this.sentencias = sentecias;
-        if(parametro != null){
+        if( parametro?.length == 0 || parametro != null){
             this.parametro = parametro;
         }else{
             this.parametro = undefined;
@@ -48,9 +48,12 @@ export class Funcion extends Sentencia {
             data += '(){\n';
         }
         let listaSentencias:string = "";
-        this.sentencias.forEach(element => {
-            listaSentencias += element.translate(); 
-        });
+        if(this.sentencias.length != 0 || this.sentencias != null){
+            this.sentencias.forEach(element => {
+                listaSentencias += element.translate(); 
+            });
+        }
+        
         data += `${listaSentencias} \n} \n`;
 
 

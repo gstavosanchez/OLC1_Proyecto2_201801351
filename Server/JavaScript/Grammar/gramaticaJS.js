@@ -107,7 +107,7 @@ case 5:
  this.$= new Class($$[$0-4], $$[$0-3], $$[$0-1], this._$.first_line, this._$.first_column); 
 break;
 case 6:
- this.$= new Class($$[$0-3], $$[$0-2], null, this._$.first_line, this._$.first_column); 
+ this.$= new Class($$[$0-3], $$[$0-2], [], this._$.first_line, this._$.first_column); 
 break;
 case 8:
 this.$ = Type.CLASS
@@ -125,10 +125,10 @@ case 15:
  this.$= new Funcion($$[$0-5], $$[$0-4], $$[$0], this._$.first_line, this._$.first_column,$$[$0-2]); 
 break;
 case 16:
- this.$= new Funcion($$[$0-4], $$[$0-3], $$[$0], this._$.first_line, this._$.first_column,null); 
+ this.$= new Funcion($$[$0-4], $$[$0-3], $$[$0], this._$.first_line, this._$.first_column,[]); 
 break;
 case 17:
- this.$= new Funcion(Type.MAIN, 'main', $$[$0], this._$.first_line, this._$.first_column,null); 
+ this.$= new Funcion(Type.MAIN, 'main', $$[$0], this._$.first_line, this._$.first_column,[]); 
 break;
 case 18:
  this.$= new Declaracion($$[$0-4], $$[$0-3], $$[$0-1], this._$.first_line, this._$.first_column); 

@@ -159,7 +159,7 @@ LISTA_CLASES :
 
 CLASE :
 	 public_ TIPO_CLASE identificador llaveAbre LISTA_SENTENCIAS_GLBOALES llaveCierra { $$= new Class($2, $3, $5, this._$.first_line, this._$.first_column); }
-	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, null, this._$.first_line, this._$.first_column); }
+	| public_ TIPO_CLASE identificador llaveAbre  llaveCierra { $$= new Class($2, $3, [], this._$.first_line, this._$.first_column); }
 	| error pcoma{
 		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
@@ -188,8 +188,8 @@ SENTENCIAS_GLOBALES:
 
 FUNCION:
 	  public_ TIPOFUNCION identificador parAbre LISTA_PARAMETROS parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
-	| public_ TIPOFUNCION identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,null); }
-	| public_ static_ void_ main_ parAbre string_ corchetes args_ parCierra BLOQUE_SENTENCIA { $$= new Funcion(Type.MAIN, 'main', $10, this._$.first_line, this._$.first_column,null); }
+	| public_ TIPOFUNCION identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,[]); }
+	| public_ static_ void_ main_ parAbre string_ corchetes args_ parCierra BLOQUE_SENTENCIA { $$= new Funcion(Type.MAIN, 'main', $10, this._$.first_line, this._$.first_column,[]); }
 	;
 
 DECLARACION:
