@@ -31,7 +31,7 @@ export class Funcion extends Sentencia {
         
     }
     translate():string{
-        let data:string = `${this.id} `;
+        let data:string = `function ${this.id} `;
         if(this.parametro != undefined){
             let listParametros:string = "";
             for (let x = 0; x < this.parametro.length; x++) {

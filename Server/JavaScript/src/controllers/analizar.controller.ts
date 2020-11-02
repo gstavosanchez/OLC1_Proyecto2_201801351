@@ -19,15 +19,13 @@ type Respuesta = {
 
 export const analizar = async (req: Request, res: Response):Promise<Response> => {
     const traduccion: Respuesta = await analiazarJava(req.body.Code);
-    //console.log(traduccion);
-
     if (traduccion.tipo == 'Error') {
         return res.status(201).json({ Error: `${traduccion.valor}` });
     } else if (traduccion.tipo == 'Translate') {
         
         return res.status(201).json(traduccion);
     } else {
-        return res.status(400).json({ Fatal: `${traduccion.valor}` });
+        return res.status(200).json({ Fatal: `${traduccion.valor}` });
     }
 }
 

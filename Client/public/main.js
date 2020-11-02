@@ -1,3 +1,4 @@
+const urlPY = "http://localhost:5000/";
 const url = "http://localhost:4000/analyze";
 const urlUpload = "http://localhost:4000/upload";
 

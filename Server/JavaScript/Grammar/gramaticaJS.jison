@@ -23,6 +23,7 @@
 	const {While} = require("../dist/ast/sentencias/While");
 	const {DoWhile} = require("../dist/ast/sentencias/DoWhile");
 	const {For} = require("../dist/ast/sentencias/For");
+	const {LlamadoFuncion} = require("../dist/ast/sentencias/LlamadoFun");
 	
 %}
 %{
@@ -228,7 +229,8 @@ LISTA_SENTENCIAS:
 
 
 SENTENCIAS:
-	 DECLARACION { $$ = $1; }
+	  INVOCACION { $$ = $1;}
+	| DECLARACION { $$ = $1; }
 	| ASIGNACION { $$ = $1; }
 	| WHILE { $$ = $1; }
 	| FOR { $$ = $1; }
@@ -242,6 +244,20 @@ SENTENCIAS:
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 		$$ = new Captura(this._$.first_line,this._$.first_column)
 	}
+	;
+
+INVOCACION:
+	 identificador parAbre parCierra pcoma { $$ = new LlamadoFuncion($1, [], this._$.first_line, this._$.first_column); }
+	| identificador parAbre LISTA_PRIMTIVO_PARAMETRO parCierra pcoma { $$ = new LlamadoFuncion($1, $3, this._$.first_line, this._$.first_column); }
+	;
+
+LISTA_PRIMTIVO_PARAMETRO:
+	  LISTA_PRIMTIVO_PARAMETRO PRIMITIVO_PARAMETRO { $1.push($2); $$ = $1;} 
+	| PRIMITIVO_PARAMETRO { $$ = [$1]}
+	;
+PRIMITIVO_PARAMETRO:
+	  PRIMITIVO coma { $$ = $1;}
+	| PRIMITIVO { $$ = $1;}
 	;
 
 ASIGNACION:
