@@ -8,7 +8,9 @@ export enum Type{
     CHAR,
     CLASS,
     INTERFACE,
-    MAIN
+    MAIN,
+    BREAK,
+    CONTINUE
 }
 export enum TypeOperation{
     SUMA,
@@ -44,6 +46,8 @@ export const translateType = (tipo:Type):string => {
         case Type.INTERFACE : return "interface";
         case Type.MAIN : return "main";
         case Type.CLASS : return "class";
+        case Type.BREAK : return "break";
+        case Type.CONTINUE : return "continue";
         default: return '';
 
     }

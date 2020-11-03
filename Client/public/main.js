@@ -9,8 +9,9 @@ async function analizar() {
   const jtxtJSharp = ace.edit("Editor");
   const entrada = jtxtJSharp.getSession().getValue();
   //console.log(entrada);
-  await setCodePython(entrada);
   await setCode(entrada);
+  await setCodePython(entrada);
+  
   
 }
 

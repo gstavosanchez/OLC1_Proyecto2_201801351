@@ -24,6 +24,7 @@
 	const {DoWhile} = require("../dist/ast/sentencias/DoWhile");
 	const {For} = require("../dist/ast/sentencias/For");
 	const {LlamadoFuncion} = require("../dist/ast/sentencias/LlamadoFun");
+	const {BreakContinue} = require("../dist/ast/sentencias/breakContinue");
 	
 %}
 %{
@@ -239,11 +240,17 @@ SENTENCIAS:
 	| PRINT { $$ = $1; }
 	| RETURN { $$ = $1; }
 	| CAMBIO { $$ = $1;}
+	| BREAK_CONTINUE { $$ = $1;}
 	| error pcoma{
 		agregarError("Sintactico",yytext,"Falta simbolo",this._$.first_line,this._$.first_column);
 		console.log('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); 
 		$$ = new Captura(this._$.first_line,this._$.first_column)
 	}
+	;
+
+BREAK_CONTINUE:
+	  break_ { $$ = new BreakContinue(Type.BREAK,this._$.first_line, this._$.first_column); }
+	| continue_ { $$ = new BreakContinue(Type.CONTINUE,this._$.first_line, this._$.first_column); }
 	;
 
 INVOCACION:
