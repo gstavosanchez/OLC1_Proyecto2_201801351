@@ -5,6 +5,17 @@
 
 <Def_Clase> -> tk_public <Tipo_Class> tk_id tk_llAbre <List_Var> tk_llCierra
 
+<Def_Var_Met> -> <List_Var> <OtraM_Def_Var_Met>
+               | <Lista_Met> <OtraV_Def_Var_Met>
+
+<OtraM_Def_Var_Met> -> <Lista_Met> <Otra_Def_Var_Met>
+
+<OtraV_Def_Var_Met> -> <List_Var> < Otra_Def_Var_Met>
+
+<Otra_Def_Var_Met> -> <List_Var> <Otra_Def_Var_Met>
+                    | <Lista_Met> <Otra_Def_Var_Met>
+                    |Epsilon
+
 <Tipo_Class> -> tk_class
               | tk_interface
 
@@ -42,3 +53,25 @@
         | num
         | id
 
+<Lista_Met> -> <Def_Met> <Otro_Met>
+
+<Otro_Met> -> <Lista_Met>
+            | Epsilon
+
+<Def_Met>  -> tk_public <Tipo_Metodo> tk_id tk_pabre <Lista_Parametros> tk_pcierra tk_llAbre tk_llCierra
+
+<Lista_Parametros> -> <Def_Parametro><Otro_Parametro>
+                   -> Epsilon
+
+<Def_Parametro> -> <Tipo> tk_id 
+
+<Otro_Parametro> -> tk_coma <Def_Parametro> <Otro_Parametro>
+                 -> Epsilon
+
+<Tipo_Metodo> -> tk_int
+                | tk_string
+                | tk_double
+                | tk_char
+                | tk_float
+                | tk_boolean
+                | tk_void

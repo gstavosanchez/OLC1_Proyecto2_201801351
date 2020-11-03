@@ -119,24 +119,31 @@ export class AnalizadorLexico {
                 this.setTokenList(TypeToken.PCIERRA,caracterActual);
             }else if(caracterActual == ";"){
                 this.setTokenList(TypeToken.PCOMA,caracterActual);
-            }else if(caracterActual == "+" && this.entrada.charAt(index + 1) == "++"){
+            }else if(caracterActual == "+" && this.entrada.charAt(index + 1) == "+"){
                 this.setTokenList(TypeToken.ADICION,"++");
+                index++;
             }else if(caracterActual == "-" && this.entrada.charAt(index + 1) == "-" ){
                 this.setTokenList(TypeToken.SUSTACCION,"--");
+                index++;
             }else if(caracterActual == "+"){
                 this.setTokenList(TypeToken.MAS,caracterActual)
             }else if(caracterActual == "-"){
                 this.setTokenList(TypeToken.MENOR,caracterActual)
             }else if(caracterActual == "<" && this.entrada.charAt(index + 1) == "="){
                 this.setTokenList(TypeToken.MENORI,"<=");
+                index++;
             }else if(caracterActual == ">" && this.entrada.charAt(index + 1) == "=" ){
                 this.setTokenList(TypeToken.MAYORI,">=");
+                index++;
             }else if (caracterActual == "<"){
                 this.setTokenList(TypeToken.MENOR,caracterActual);
             }else if (caracterActual == ">"){
                 this.setTokenList(TypeToken.MAYOR,caracterActual);
             }else if (caracterActual == ":"){
                 this.setTokenList(TypeToken.DPUNTOS,caracterActual);
+            }else if( caracterActual == "=" && this.entrada.charAt(index + 1) == "="){
+                this.setTokenList(TypeToken.COMPARACION,"==");
+                index++;
             }else if(caracterActual == "="){
                 this.setTokenList(TypeToken.IGUAL,caracterActual);
             }else if(caracterActual == ","){

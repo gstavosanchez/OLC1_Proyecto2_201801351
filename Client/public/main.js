@@ -1,5 +1,5 @@
-const urlPY = "http://localhost:5000";
-const url = "http://localhost:4000/analyze";
+const urlPY = "http://localhost:5000"; // Node js server para python
+const url = "http://localhost:4000/analyze"; // node js server js
 const urlUpload = "http://localhost:4000/upload";
 
 
