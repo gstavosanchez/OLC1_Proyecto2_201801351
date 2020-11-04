@@ -17,7 +17,7 @@ export class LlamadoFuncion extends Sentencia {
     }
 
     translate(): string {
-        console.log('traduccion de invocacion');
+        
         let data: string = `${this.id}`;
         if ( this.sentencias.length != 0 || this.sentencias != null) {
             let listParemtros: string = ""

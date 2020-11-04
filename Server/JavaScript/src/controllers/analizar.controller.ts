@@ -16,6 +16,13 @@ type Respuesta = {
     valor: string
     img:string
 }
+export const downloadFile =  (req: Request, res: Response): void => {
+    const pathFile1:string = `${path.resolve('uploads/mainJS.js')}`;
+    return res.download(pathFile1,(err)=>{
+        //console.log(err)
+    });
+    
+}
 
 export const analizar = async (req: Request, res: Response):Promise<Response> => {
     const traduccion: Respuesta = await analiazarJava(req.body.Code);
@@ -39,18 +46,18 @@ async function analiazarJava(codigo: string):Promise<Respuesta> {
                 img:''
             };
         } else {
+            const astTranslate:string = ast.translate();
             const grafoAST = new  GrafoAST(ast);
             const txtDot = grafoAST.getGrafo();
             const path:string =   await generateDOT(txtDot);
-            //console.log(txtDot)
+            await generateDowload(astTranslate);
             return {
                 tipo: 'Translate',
-                valor: `${ast.translate()}` ,
-                img:path
+                valor: astTranslate ,
+                img:`${path}.pdf`
             };
         }
     } catch (error) {
-        ///console.log(error)
         return {
             tipo:'Fatal',
             valor:'Error Sintactico',
@@ -60,8 +67,12 @@ async function analiazarJava(codigo: string):Promise<Respuesta> {
 
 
 }
+//////////////////////////////////////////////////////
+export const generateDowload = async (data:string):Promise<void> =>{
+    await fs.writeFile(`uploads/mainJS.js`,data)
+}
 
-/////////////////////////////////////////
+////////////////////////////////////////////////////
 export const uploadFile = async (req: Request, res: Response): Promise<Response> => {
     const ruta = path.resolve(req.file.path)
     //console.log(`ruta:${req.file.path}`);
@@ -84,11 +95,7 @@ export const getFile = (req: Request, res: Response): Response => {
 
 }
 
-export const downloadFile = async (req: Request, res: Response): Promise<Response> => {
-    const texto: string = req.body.Code;
-    await fs.writeFile('hola.txt', texto);
-    return res.status(201).json({ Succes: "Succes full" });
-}
+
 
 async function generateDOT(data:string):Promise<string>{
     const id:string = uuidv4();
@@ -103,7 +110,10 @@ async function generateDOT(data:string):Promise<string>{
     const command:string = `dot -Tpdf ${rutaABS}.dot -o ${rutaABS}.pdf`;
     child_process.exec(command);
     //await fs.unlink(`${rutaABS}.dot`);
-    return `${id}.pdf`;
+
     
-    
+    return `${id}`;
+        
 }
+
+
