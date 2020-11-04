@@ -249,8 +249,8 @@ SENTENCIAS:
 	;
 
 BREAK_CONTINUE:
-	  break_ { $$ = new BreakContinue(Type.BREAK,this._$.first_line, this._$.first_column); }
-	| continue_ { $$ = new BreakContinue(Type.CONTINUE,this._$.first_line, this._$.first_column); }
+	  break_ pcoma { $$ = new BreakContinue(Type.BREAK,this._$.first_line, this._$.first_column); }
+	| continue_ pcoma { $$ = new BreakContinue(Type.CONTINUE,this._$.first_line, this._$.first_column); }
 	;
 
 INVOCACION:
