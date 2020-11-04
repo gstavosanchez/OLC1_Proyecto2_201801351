@@ -1,18 +1,21 @@
 import { NodoError } from "./error";
 import { Grafo } from "./grafo/grafo";
 import { Sentencia } from "./Sentencia";
+import { generateReport, TokenList } from "./token";
 
 export class AST extends Sentencia {
     private sentencias: Array<Sentencia>;
     private listaError: Array<NodoError>;
-    //private listaPrints:Array<string>;
+    private listToken : Array<TokenList>
     constructor(
         sentecias: Array<Sentencia>,
-        listaError: Array<NodoError>
+        listaError: Array<NodoError>,
+        listaToken:Array<TokenList>
     ) {
         super(0, 0);
         this.sentencias = sentecias;
         this.listaError = listaError;
+        this.listToken = listaToken;
     }
 
     translate(): string {
@@ -47,6 +50,10 @@ export class AST extends Sentencia {
             inst.generateGrafo(grafo,nameSon);
 
         });
+    }
+
+    async generateReportToken():Promise<void>{
+        await generateReport(this.listToken);
     }
 
     getNameSon(): string {

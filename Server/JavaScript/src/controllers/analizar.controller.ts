@@ -51,6 +51,7 @@ async function analiazarJava(codigo: string):Promise<Respuesta> {
             const txtDot = grafoAST.getGrafo();
             const path:string =   await generateDOT(txtDot);
             await generateDowload(astTranslate);
+            await ast.generateReportToken();
             return {
                 tipo: 'Translate',
                 valor: astTranslate ,

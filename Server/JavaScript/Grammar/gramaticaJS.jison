@@ -4,6 +4,7 @@
 	const {AST} = require("../dist/ast/AST");
 	const {NodoError} = require("../dist/ast/error");
 	const {Captura} = require("../dist/ast/captura");
+	const {TokenList} = require("../dist/ast/token");
 
 	const {Primitivo} = require("../dist/ast/expresion/Primitivo");
 	const {Identificador} = require("../dist/ast/expresion/Identificador");
@@ -29,10 +30,15 @@
 %}
 %{
 	var listError = [];
+	var listaToken = [];
 	function agregarError(tipo,value,descripcion,fila,columna){
 		newError = new NodoError(tipo,value,descripcion,fila,columna);
 		listError.push(newError);
 	};
+	function addTokenList(line,columna,tipo,descripcion){
+		newToken = new TokenList(line,columna,tipo,descripcion);
+		listaToken.push(newToken);
+	}
 	%}
 
 /* Definició Léxica */
@@ -45,74 +51,74 @@
 "//".*				/* ignore comment line */
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]		/* ignore comment Multilinea*/
 
-"int"			    return 'int_';
-"string"			return 'string_';
-"boolean"			return 'boolean_';
-"char"				return 'char_';
-"float"				return 'float_';
-"double"				return 'double_';
-"void"				return 'void_';
+"int" %{addTokenList(yylloc.first_line,yylloc.first_column,'Int',yytext); return 'int_'; %}	
+"string" %{addTokenList(yylloc.first_line,yylloc.first_column,'String',yytext); return 'string_'; %}			
+"boolean" %{addTokenList(yylloc.first_line,yylloc.first_column,'Boolean',yytext); return 'boolean_';  %}			
+"char" %{addTokenList(yylloc.first_line,yylloc.first_column,'Char',yytext); return 'char_'; %}				
+"float" %{addTokenList(yylloc.first_line,yylloc.first_column,'Float',yytext); return 'float_'; %}				
+"double" %{addTokenList(yylloc.first_line,yylloc.first_column,'Double',yytext); return 'double_'; %}			
+"void" %{addTokenList(yylloc.first_line,yylloc.first_column,'Void',yytext); return 'void_'; %}				
 
-"print"				return 'print_';
-"println"			return 'println_';
-"System"			return 'system_';
-"out"				return 'out_';
-"while"				return 'while_';
-"if"				return 'if_';
-"else"				return 'else_';
-"class"				return 'class_';
-"interface"			return 'interface_';
-"return"			return 'return_';
-"break"				return 'break_';
-"continue"			return 'continue_';
-"main"				return 'main_';
-"args"				return 'args_';
-"public"			return 'public_';
-"static"			return 'static_';
-"else"				return 'else_';
-"do"				return 'do_';
-"for"				return 'for_';
-
-
-"=="				return 'dobleIgual_';
-"="					return 'igual';
-";"					return 'pcoma';
-"."					return 'punto_';
-","					return 'coma';
-"{"					return 'llaveAbre';
-"}"					return 'llaveCierra';
-"[]"				return 'corchetes';
-
-"++"				return 'adicion_';
-"+"					return 'mas';
-"--"				return 'sustraccion_';
-"-"					return 'menos';
-"*"					return 'por';
-"/"					return 'division';
-"("					return 'parAbre';
-")"					return 'parCierra';
-
-"<="				return 'menorQI';
-">="				return 'mayorQI';
-"<"					return 'menorQ';
-">"					return 'mayorQ';
-"!="				return 'difirente_';
-
-"&&"				return 'and_';
-"||"				return 'or_';
-"!"					return 'not_';
-"^"					return 'xor_';
-
-"true"				return 'true_';
-"false"				return 'false_';
-
-\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); return 'cadena'; /*//"*/ }
-"'"[^']"'"				 return 'caracter';
-
-[0-9]+("."[0-9]+)?		return 'decimal';
+"print" %{addTokenList(yylloc.first_line,yylloc.first_column,'Print',yytext); return 'print_';%}				
+"println" %{addTokenList(yylloc.first_line,yylloc.first_column,'Println',yytext); return 'println_';%}			
+"System" %{addTokenList(yylloc.first_line,yylloc.first_column,'System',yytext); return 'system_'; %}			
+"out" %{addTokenList(yylloc.first_line,yylloc.first_column,'Out',yytext); return 'out_';%}				
+"while" %{addTokenList(yylloc.first_line,yylloc.first_column,'While',yytext);return 'while_'; %}				
+"if" %{addTokenList(yylloc.first_line,yylloc.first_column,'If',yytext); return 'if_'; %}				
+"else" %{addTokenList(yylloc.first_line,yylloc.first_column,'Else',yytext); return 'else_'; %}				
+"class" %{addTokenList(yylloc.first_line,yylloc.first_column,'Class',yytext); return 'class_'; %}				
+"interface" %{addTokenList(yylloc.first_line,yylloc.first_column,'Interface',yytext); return 'interface_'; %}			
+"return" %{addTokenList(yylloc.first_line,yylloc.first_column,'Return',yytext); return 'return_'; %}			
+"break" %{addTokenList(yylloc.first_line,yylloc.first_column,'Break',yytext); return 'break_';%}				
+"continue" %{addTokenList(yylloc.first_line,yylloc.first_column,'Continue',yytext); return 'continue_'; %}			
+"main"	 %{addTokenList(yylloc.first_line,yylloc.first_column,'Main',yytext); return 'main_'; %}			
+"args" %{addTokenList(yylloc.first_line,yylloc.first_column,'Args',yytext); return 'args_'; %}				
+"public" %{addTokenList(yylloc.first_line,yylloc.first_column,'Modificador',yytext); return 'public_'; %}			
+"static"  %{addTokenList(yylloc.first_line,yylloc.first_column,'Stati',yytext); return 'static_'; %}			
+"else" %{addTokenList(yylloc.first_line,yylloc.first_column,'Else',yytext); return 'else_'; %}				
+"do" %{addTokenList(yylloc.first_line,yylloc.first_column,'Do',yytext); return 'do_'; %}				
+"for" %{addTokenList(yylloc.first_line,yylloc.first_column,'For',yytext); return 'for_'; %}				
 
 
-([a-zA-Z_])[a-zA-Z0-9_]*		return 'identificador';
+"==" %{addTokenList(yylloc.first_line,yylloc.first_column,'Comparacion',yytext); return 'dobleIgual_'; %}			
+"=" %{addTokenList(yylloc.first_line,yylloc.first_column,'Igual',yytext); return 'igual'; %}					
+";" %{addTokenList(yylloc.first_line,yylloc.first_column,'Punto y Coma',yytext); 	return 'pcoma'; %}				
+"." %{addTokenList(yylloc.first_line,yylloc.first_column,'Punto',yytext); return 'punto_'; %}					
+","	%{addTokenList(yylloc.first_line,yylloc.first_column,'Coma',yytext); return 'coma'; %}				
+"{" %{addTokenList(yylloc.first_line,yylloc.first_column,'Llave Abre',yytext);return 'llaveAbre'; %}					
+"}" %{addTokenList(yylloc.first_line,yylloc.first_column,'Llave Cierra',yytext); return 'llaveCierra'; %}					
+"[]" %{addTokenList(yylloc.first_line,yylloc.first_column,'Corchetes',yytext); return 'corchetes'; %}					
+
+"++" %{addTokenList(yylloc.first_line,yylloc.first_column,'Incremento',yytext); return 'adicion_';%}				
+"+" %{addTokenList(yylloc.first_line,yylloc.first_column,'Mas',yytext);return 'mas';%}					
+"--" %{addTokenList(yylloc.first_line,yylloc.first_column,'Decremento',yytext);return 'sustraccion_';%}				
+"-"  %{addTokenList(yylloc.first_line,yylloc.first_column,'Menos',yytext);return 'menos';%}					
+"*"	 %{addTokenList(yylloc.first_line,yylloc.first_column,'Por',yytext); return 'por'; %}				
+"/" %{addTokenList(yylloc.first_line,yylloc.first_column,'Division',yytext);	return 'division';%}				
+"(" %{addTokenList(yylloc.first_line,yylloc.first_column,'Parentesis Abre',yytext);return 'parAbre'; %}					
+")" %{addTokenList(yylloc.first_line,yylloc.first_column,'Parentesis Cierra',yytext);return 'parCierra';%}					
+
+"<=" %{addTokenList(yylloc.first_line,yylloc.first_column,'Menor Igual',yytext); return 'menorQI'; %}				
+">=" %{addTokenList(yylloc.first_line,yylloc.first_column,'Mayor Igual',yytext);	return 'mayorQI';%}			
+"<"	%{addTokenList(yylloc.first_line,yylloc.first_column,'Menor',yytext);return 'menorQ';%}				
+">" %{addTokenList(yylloc.first_line,yylloc.first_column,'Mayor',yytext);return 'mayorQ';%}					
+"!=" %{addTokenList(yylloc.first_line,yylloc.first_column,'Diferente',yytext);return 'difirente_';%}					
+
+"&&" %{addTokenList(yylloc.first_line,yylloc.first_column,'And',yytext);return 'and_';%}				
+"||" %{addTokenList(yylloc.first_line,yylloc.first_column,'Or',yytext);return 'or_'; %}				
+"!"  %{addTokenList(yylloc.first_line,yylloc.first_column,'Not',yytext);return 'not_';%}					
+"^" %{addTokenList(yylloc.first_line,yylloc.first_column,'Xor',yytext);return 'xor_';%}					
+
+"true" %{addTokenList(yylloc.first_line,yylloc.first_column,'Boolean',yytext);return 'true_';%}				
+"false" %{addTokenList(yylloc.first_line,yylloc.first_column,'Boolean',yytext);return 'false_';%}				
+
+\"[^\"]*\"				{ yytext = yytext.substr(1,yyleng-2); addTokenList(yylloc.first_line,yylloc.first_column,'Cadena',yytext);  return 'cadena'; /*//"*/ }
+"'"[^']"'" %{addTokenList(yylloc.first_line,yylloc.first_column,'Caracter',yytext);return 'caracter';%}				 
+
+[0-9]+("."[0-9]+)? %{addTokenList(yylloc.first_line,yylloc.first_column,'Numero',yytext);return 'decimal';%}		
+
+
+([a-zA-Z_])[a-zA-Z0-9_]* %{addTokenList(yylloc.first_line,yylloc.first_column,'Id',yytext);return 'identificador';%}		
 [ \r\t]+			{}
 \n					{}
 <<EOF>>				return 'EOF';
@@ -142,8 +148,9 @@
 
 %% 
 INI : LISTA_CLASES EOF {
-		var root = new AST($1,listError);
+		var root = new AST($1,listError,listaToken);
 		listError = []
+		listaToken = []
 		return root;
 	}
 	| error {
