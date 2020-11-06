@@ -24,6 +24,14 @@ export const downloadFile =  (req: Request, res: Response): void => {
     
 }
 
+export const downloadReport =  (req: Request, res: Response): void => {
+    const pathFile1:string = `${path.resolve('uploads/reportJS.md')}`;
+    return res.download(pathFile1,(err)=>{
+        //console.log(err)
+    });
+    
+}
+
 export const analizar = async (req: Request, res: Response):Promise<Response> => {
     const traduccion: Respuesta = await analiazarJava(req.body.Code);
     if (traduccion.tipo == 'Error') {

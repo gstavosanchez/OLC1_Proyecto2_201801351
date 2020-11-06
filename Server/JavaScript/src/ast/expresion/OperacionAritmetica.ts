@@ -52,21 +52,24 @@ export class OperacionAritmetica extends Sentencia {
         }
     }
 
-    generateGrafo(grafo: Grafo, padre: string):void{
-        let nameSon = "nodo"+grafo.contador;
-        grafo.grafo += " "+nameSon +"[label=\""+this.operador1.getNameSon() + "\"];\n";
-        grafo.grafo += "  "+padre +" -> "+ nameSon+";\n";
+    generateGrafo(grafo: Grafo, padre: string): void {
+        let nameSon = "nodo" + grafo.contador;
+        grafo.grafo += " " + nameSon + "[label=\"" + this.operador1.getNameSon() + "\"];\n";
+        grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
         grafo.contador++;
-        this.operador1.generateGrafo(grafo,nameSon);
+        this.operador1.generateGrafo(grafo, nameSon);
 
-        if(this.operador2 != null || this.operador2 != ''){
-            nameSon = "nodo"+grafo.contador;
-            grafo.grafo += "  " + nameSon + "[label=\"" + this.operador2.getNameSon() + "\"];\n";
-            grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
-            grafo.contador++;
-            this.operador2.generateGrafo(grafo,nameSon);
+        if (this.operador2 != null || this.operador2 != '') {
+            if (this.tipoOperacion != TypeOperation.NEGATIVO) {
+                nameSon = "nodo" + grafo.contador;
+                grafo.grafo += "  " + nameSon + "[label=\"" + this.operador2.getNameSon() + "\"];\n";
+                grafo.grafo += "  " + padre + " -> " + nameSon + ";\n";
+                grafo.contador++;
+                this.operador2.generateGrafo(grafo, nameSon);
+            }
+
 
         }
-        
+
     }
 }

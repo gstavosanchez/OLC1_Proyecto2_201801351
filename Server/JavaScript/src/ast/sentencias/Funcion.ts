@@ -52,6 +52,10 @@ export class Funcion extends Sentencia {
             this.sentencias.forEach(element => {
                 listaSentencias += element.translate(); 
             });
+        }else{
+            data += `; \n`;
+            const abstra:string = data.replace("{","");
+            return abstra;
         }
         
         data += `${listaSentencias} \n} \n`;

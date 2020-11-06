@@ -140,7 +140,8 @@
 %left 'mas' 'menos'
 %left 'por' 'division'
 
-%right 'UMENOS' 'UNOT' 
+%left UMENOS
+%right UNOT 
 
 
 
@@ -198,6 +199,8 @@ FUNCION:
 	  public_ TIPOFUNCION identificador parAbre LISTA_PARAMETROS parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $7, this._$.first_line, this._$.first_column,$5); }
 	| public_ TIPOFUNCION identificador parAbre parCierra BLOQUE_SENTENCIA { $$= new Funcion($2, $3, $6, this._$.first_line, this._$.first_column,[]); }
 	| public_ static_ void_ main_ parAbre string_ corchetes args_ parCierra BLOQUE_SENTENCIA { $$= new Funcion(Type.MAIN, 'main', $10, this._$.first_line, this._$.first_column,[]); }
+	| public_ TIPOFUNCION identificador parAbre LISTA_PARAMETROS parCierra pcoma { $$= new Funcion($2, $3, [], this._$.first_line, this._$.first_column,$5); }
+	| public_ TIPOFUNCION identificador parAbre parCierra pcoma { $$= new Funcion($2, $3, [], this._$.first_line, this._$.first_column,[]); }
 	;
 
 DECLARACION:
@@ -315,9 +318,7 @@ EXPRESION:
 	 EXPRESION mas EXPRESION { $$ = new OperacionAritmetica( TypeOperation.SUMA, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION menos EXPRESION { $$ = new OperacionAritmetica( TypeOperation.RESTA, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION por EXPRESION { $$ = new OperacionAritmetica( TypeOperation.MULTIPLICACION, $1, $3, this._$.first_line, this._$.first_column); }
-	//| EXPRESION adicion_ %prec UMAS { $$ = new OperacionAritmetica.default( TypeOperation.ADICION, $1, '', this._$.first_line, this._$.first_column); } 
-	//| EXPRESION sustraccion_ { $$ = new OperacionAritmetica.default( TypeOperation.SUSTRACCION, $1, null, this._$.first_line, this._$.first_column); }  
-	| menos EXPRESION %prec UMENOS { $$ = new OperacionAritmetica( TypeOperation.NEGATIVO, $2, null, this._$.first_line, this._$.first_column); }
+	| menos EXPRESION %prec UMENOS { $$ = new OperacionAritmetica( TypeOperation.NEGATIVO, $2, $2, this._$.first_line, this._$.first_column); }
 		//Relacionales
 	| EXPRESION mayorQI EXPRESION { $$ = new OperacionRelacional( TypeOperation.MAYOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION menorQI  EXPRESION { $$ = new OperacionRelacional( TypeOperation.MENOR_IGUAL, $1, $3, this._$.first_line, this._$.first_column); }
@@ -328,10 +329,12 @@ EXPRESION:
 		//Logicos
 	| EXPRESION or_ EXPRESION { $$ = new OperacionLogica( TypeOperation.OR, $1, $3, this._$.first_line, this._$.first_column); }
 	| EXPRESION and_ EXPRESION { $$ = new OperacionLogica( TypeOperation.AND, $1, $3, this._$.first_line, this._$.first_column); }
-	| not_ EXPRESION %prec UNOT { $$ = new OperacionLogica( TypeOperation.NOT, $2, null, this._$.first_line, this._$.first_column); }
+	| not_ EXPRESION %prec UNOT { $$ = new OperacionLogica( TypeOperation.NOT, $2, $2, this._$.first_line, this._$.first_column); }
 	| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| parAbre EXPRESION parCierra {$$ = $2;}
 	| PRIMITIVO { $$ = $1;}
+	//| identificador adicion_  { $$ = new Cambio( TypeOperation.ADICION, $1, false, this._$.first_line, this._$.first_column); }  
+	//| identificador sustraccion_ { $$ = new Cambio( TypeOperation.SUSTRACCION, $1, false, this._$.first_line, this._$.first_column); }  
 	;
 
 CAMBIO:

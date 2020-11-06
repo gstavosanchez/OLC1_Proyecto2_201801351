@@ -18,7 +18,6 @@ type allCode []codeJava
 
 var codes = allCode{
 	{
-
 		Code: "Some content",
 	},
 }
