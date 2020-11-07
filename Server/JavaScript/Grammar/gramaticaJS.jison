@@ -333,8 +333,8 @@ EXPRESION:
 	| EXPRESION xor_ EXPRESION { $$ = new OperacionAritmetica( TypeOperation.XOR, $1, $3, this._$.first_line, this._$.first_column); }
 	| parAbre EXPRESION parCierra {$$ = $2;}
 	| PRIMITIVO { $$ = $1;}
-	//| identificador adicion_  { $$ = new Cambio( TypeOperation.ADICION, $1, false, this._$.first_line, this._$.first_column); }  
-	//| identificador sustraccion_ { $$ = new Cambio( TypeOperation.SUSTRACCION, $1, false, this._$.first_line, this._$.first_column); }  
+	| identificador adicion_  { $$ = new Cambio( TypeOperation.ADICION, $1, false, this._$.first_line, this._$.first_column); }  
+	| identificador sustraccion_ { $$ = new Cambio( TypeOperation.SUSTRACCION, $1, false, this._$.first_line, this._$.first_column); }  
 	;
 
 CAMBIO:

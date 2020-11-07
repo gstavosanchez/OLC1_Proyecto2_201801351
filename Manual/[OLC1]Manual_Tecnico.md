@@ -49,8 +49,9 @@ Es un proyecto de código abierto que automatiza el despliegue de aplicaciones d
 ***Docker*** utiliza características de aislamiento de recursos del kernel Linux, tales como cgroups y espacios de nombres (namespaces) para permitir que "contenedores" independientes se ejecuten dentro de una sola instancia de Linux, evitando la sobrecarga de iniciar y mantener máquinas virtuales
 
 ```typescript
+//docker run -p 4000:4000 -it gstavosanchez/server-js -> Servidor de node js para JavaScript
 //docker run -p 5000:5000 gstavosanchez/server-py -> Servidor de node js para python
-//docker run -p 3000:3000 gstavosanchez/client-go -> cliente de Golang
+//docker run -p 3000:3000 gstavosanchez/client-go -> Cliente de Golang
 
 ```
 

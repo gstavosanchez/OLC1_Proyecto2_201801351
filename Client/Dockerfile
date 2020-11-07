@@ -1,6 +1,6 @@
-#docker build -t gstavosanchez/clientgo .
+#docker build -t gstavosanchez/client-go .
 #docker login
-#docker push gstavosanchez/clientgo
+#docker push gstavosanchez/client-go
 FROM golang:1.15
 
 WORKDIR /
