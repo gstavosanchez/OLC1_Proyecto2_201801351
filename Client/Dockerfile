@@ -1,13 +1,14 @@
-FROM golang:alpine
+#docker build -t gstavosanchez/clientgo .
+#docker login
+#docker push gstavosanchez/clientgo
+FROM golang:1.15
 
-RUN mkdir -p /go/src/servergo
-
-WORKDIR /go/src/servergo
+WORKDIR /
 
 COPY . .
 
-RUN go get -u github.com/gorilla/mux
-
-RUN go build -o /go/bin/servergo cmd/main.go
+RUN go get -d github.com/gorilla/mux
 
 EXPOSE 3000
+
+CMD ["go","run","main.go"]

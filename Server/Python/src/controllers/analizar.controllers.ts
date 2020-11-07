@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { ErrorAnalisis } from '../analisis/error.analisis';
 import { AnalizadorLexico } from '../analisis/lexico/analizadorLex.lexico';
-import { Token } from '../analisis/lexico/token.lexico';
+import { Token, translateType } from '../analisis/lexico/token.lexico';
 import { AnalizadorSintactico } from '../analisis/sintactico/analizadorSin.sintactico';
 
 export const analizar = (req: Request, res: Response): Response => {
@@ -14,12 +14,9 @@ export const analizar = (req: Request, res: Response): Response => {
 const initAnalisis = (cadena: string):Respuesta => {
     // Inicio de Analisis lexico 
     const lexico: AnalizadorLexico = new AnalizadorLexico();
-    console.log("----------------->Inicio Analisis lexico <------------------------")
+    /// Analisis Lexico
     const listToken: Array<Token> = lexico.analizar(cadena);
-    listToken.forEach((token, index) => {
-        console.log(`No:${index},Tipo:${token.getType()},valor:${token.getLexema()}`)
-    });
-    console.log("----------------->Fin Analisis lexico <------------------------")
+    const dataListToken:string = generateReportToke(listToken);
     const listELexico:Array<ErrorAnalisis> = lexico.getListError();
     if (listELexico.length == 0) {
         console.log("")
@@ -36,7 +33,7 @@ const initAnalisis = (cadena: string):Respuesta => {
     }
     return {
         tipo: 'Translate',
-        valor: 'Analisi exitoso',
+        valor: dataListToken,
         img: ''
     }
 
@@ -45,7 +42,17 @@ const initAnalisis = (cadena: string):Respuesta => {
 const getListError = (lista:Array<ErrorAnalisis>):string =>{
     let data:string = "";
     lista.forEach(valor => {
-        data += `Caracter:${valor.getCaracter()}, Tipo:${valor.getTypeError()} ,Ln ${valor.getLinea()}, Col ${valor.getColumn()}`
+        data += `Caracter:${valor.getCaracter()}, Tipo:${valor.getTypeError()} ,Ln ${valor.getLinea()}, Col ${valor.getColumn()}\n`
+    });
+    return data;
+}
+
+function generateReportToke(lista:Array<Token>):string{
+    let data:string = "--> Reporte de Tokens analisis sin herramienta \n \n"
+    
+    data += " No | Tipo | Descripcion\n________________________\n";
+    lista.forEach((token,index) => {
+        data += ` ${index} | ${translateType(token.getType())}: ${token.getLexema()} \n`;
     });
     return data;
 }

@@ -9,7 +9,7 @@ import {v4 as uuidv4 } from 'uuid'
 
 
 //Contenedor de dokcer ->  docker run -p 4000:4000 -it appjs bash
-///docker build -t appjs .
+///docker build -t appjs . -> Para ejecutar el archivo de docker 
 
 type Respuesta = {
     tipo: string
